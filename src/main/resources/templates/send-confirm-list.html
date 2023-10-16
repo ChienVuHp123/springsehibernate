@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm List Student</title>
+    <<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/home_style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/assets/font/themify-icons/themify-icons.css">
+
+    <link rel="stylesheet" href="/css/home_style.css">
+    <link rel="stylesheet" href="/assets/font/themify-icons/themify-icons.css">
+
+</head>
+<body>
+<script src="/js/home.js">
+</script>
+<div style="position: relative; top: -23px" id="main">
+    <div th:fragment="navbar" id="header">
+        <!-- Begin: NAV -->
+        <ul id="nav">
+            <li><a href="">Logo</a></li>
+            <li><a th:href="@{/home}">Home</a></li>
+            <!--            <li><a th:href="@{/students}">Student Management</a></li>-->
+            <li th:if="${#lists.contains(roles, 'ROLE_Khoa')}">
+                <a th:href="@{/khoa}">Subject Management</a>
+            </li>
+            <li th:if="${#lists.contains(roles, 'ROLE_BoMon')}">
+                <a th:href="@{/bo-mon}">Lecturer Management</a>
+            </li>
+            <li th:if="${#lists.contains(roles, 'ROLE_GiangVien')}">
+                <a th:href="@{/students}">Student Management</a>
+            </li>
+            <li><a th:href="@{/notify/{lecturerId}(lecturerId=${accountId})}">Notification</a></li>
+        </ul>
+        <!-- End: NAV -->
+
+        <!-- Begin: Account button-->
+        <div class="Account-btn">
+            <!-- <i class="Account-icon ti-face-smile"></i> -->
+            <p style=" display: inline-block; color: white; margin-top: 6px;"
+               th:text="${realname}"></p>
+            <img src="/assets/img/avatar2.png" class="avatar-img" style="height: 40px; display: inline-block;">
+        </div>
+        <!-- End: Account Button-->
+    </div>
+
+    <div id = "content">
+        <div id="currentNav"></div>
+        <div class="main-page">
+            <div class="header-section">
+                <div class="name-header">
+                    <p class="listTable">Danh sách Sinh Viên</p>
+                </div>
+            </div>
+            <div class="content-section">
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>MSV</th>
+                        <th>Họ và tên</th>
+                        <th>Ngày sinh</th>
+                        <th>ĐTBC/TC học lại</th>
+                        <th>Đề Tài</th>
+                        <th>Cán bộ hướng dẫn</th>
+                        <th>Nơi công tác</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Lặp qua danh sách sinh viên đã xác nhận -->
+                    <tr th:each="student : ${confirmedStudents}">
+                        <td th:text="${student.student.ID}"></td>
+                        <td style="white-space: nowrap" th:text="${student.student.getName()}"></td>
+                        <td style="white-space: nowrap" th:text="${student.student.getDateOfBirth()}"></td>
+                        <td th:text="${student.student.dtbc}"></td>
+                        <td th:text="${student.student.getThesistopics()}"></td>
+                        <td th:text="${student.student.getNamelecturer()}"></td>
+                        <td th:text="${student.student.getUniversity()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <!-- Modal thông báo -->
+                <div class="modal fade" id="successModal">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Thông Báo</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body" th:text="${successMessage}"></div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script th:inline="javascript">
+                    $(document).ready(function() {
+                        var successMessage = /*[[${successMessage}]]*/ null;
+                        if (successMessage) {
+                            $('#successModal').modal('show');
+                        }
+                    });
+                </script>
+                <!-- Nút mở modal -->
+                <div class="CsvAndSend">
+                    <button class="button-csv" onclick="exportTableToCSV('DanhSachDoAn.csv')">Xuất CSV</button>
+                    <button class="button-send" data-toggle="modal" data-target="#messageModal">Send</button>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="messageModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Gửi danh sách sinh viên</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- Form trong modal -->
+                            <form th:action="@{/bo-mon/send-confirm-list}" method="post">
+                            <div class="modal-body">
+                                    <!-- Textarea để nhập nội dung tin nhắn -->
+                                    <textarea placeholder="title" name="messageContent" id="textareaMessageContent" style="width: 100%"></textarea>
+
+                                    <!-- Giả sử bạn muốn gửi receiverId cố định, bạn có thể thêm input ẩn tại đây -->
+                                    <input type="hidden" name="receiverId" th:value="${1}" />
+                                </div>
+
+                                <div class="modal-footer">
+                                    <!-- Nút submit form -->
+                                    <button type="submit" class="btn btn-primary">Send</button>
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

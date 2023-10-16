@@ -1,0 +1,298 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-family:  Helvetica,Arial, sans-serif;
+    color: #083761;
+}
+
+.clear {
+    clear: both;
+}
+
+
+.text-white {
+    color: white !important;
+}
+
+
+#main  {
+    background-color: #F3F3F3;
+    height: 100vh;
+}
+
+#header {
+    height: 46px;
+    background-color: #083761;
+    font-size: medium;
+    border-radius: 6px 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+
+}
+
+#nav {
+    display: inline-block;
+}
+
+#nav > li {
+    display: inline-block;
+    position: relative;
+
+}
+
+#nav > li > a {
+    color: white;
+    text-transform: uppercase;
+}
+
+#nav li a {
+    text-decoration: none;
+    line-height: 46px;
+    padding: 0 24px;
+    display: block;
+
+}
+
+#nav > li:hover {
+    background-color: rgba(29,142,208,.08);;
+    border-radius: 10px;
+
+}
+
+#header .Account-btn {
+    float: right;
+    /* line-height: 46px; */
+    display: flex;  /* Chuyển div thành flex container */
+    align-items: center;  /* Căn giữa theo chiều dọc */
+}
+
+#content {
+    margin: 46px 10px 0 10px;
+}
+
+#currentNav {
+    padding: 10px;
+
+}
+#content .main-page {
+    background-color: white;
+    padding: 5px 5px 70vh 5px;
+    border-radius: 10px;
+}
+
+.main-page .header-section {
+
+    margin: 10px;
+}
+
+.main-page .content-section {
+    margin: 10px;
+}
+
+
+table {
+    border-collapse: collapse;
+    font-size: 0.9em;
+    width: 100%;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+table thead tr {
+    background-color: #083761;
+    color: white;
+    text-align: left;
+    font-weight: bold;
+}
+
+table th, table td {
+    padding: 12px 15px;
+}
+
+table tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+table tbody tr:nth-of-type(even) {
+    background-color: #F3F3F3;
+}
+
+table tbody tr:last-of-type {
+    border-bottom: 2px solid #083761;
+}
+
+
+.add-icon {
+    display: inline-block;
+    font-size: small;
+    text-rendering: auto;
+
+
+}
+.main-page .header-section .name-header,
+.main-page .header-section .Add-new-section {
+    display: inline-block;
+}
+
+.main-page .header-section .Add-new-section {
+    float: right;
+}
+
+.Add-new-section .btn-add-new {
+    padding:0 5px 2px 5px;
+    height: 30px ;
+    font-weight: bold;
+    min-width: 100px;
+    border-radius: 50px;
+    border: #17a2b8;
+    background-color: #17a2b8;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+
+}
+.btn-add-new:focus {
+    outline: none;
+    box-shadow: none;
+}
+.Add-new-section .btn-add-new:hover {
+    background-color: #3494d4;
+}
+
+.form-control {
+    height: 32px;
+    width: 100%;
+    line-height: 32px;
+    padding: 4px 6px;
+    border: 1px solid #ced4da;
+    box-shadow: none;
+    color: #083761;
+}
+
+.CsvAndSend {
+    padding-top: 10px;
+}
+.CsvAndSend .button-csv {
+    margin-left: 12px;
+    padding: 10px 15px;
+    color: #fff;
+    background-color: #17a2b8;
+    border: 2px solid #17a2b8;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+
+}
+
+.CsvAndSend .button-csv:hover {
+    background-color: #3494d4;
+}
+
+.CsvAndSend .button-send {
+    margin-left: 12px;
+    padding: 10px 30px;
+    color: #fff;
+    background-color: #17a2b8;
+    border: 2px solid #17a2b8;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.CsvAndSend .button-send:hover {
+    background-color: #3494d4;
+}
+
+.GiangVienDoAn {
+    border: 1px solid rgba(29,142,208,.5);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    padding: .5rem;
+    cursor: pointer;
+    transition: transform .2s;
+}
+
+.GiangVienDoAn:hover {
+    box-shadow: 0 10px 10px -10px #00000080;
+}
+
+.GiangVienDoAn .Title-Topic {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.GiangVienDoAn .Name-lecture {
+}
+
+.BoMonList {
+    border: 1px solid rgba(29,142,208,.5);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    padding: .5rem;
+    cursor: pointer;
+    transition: transform .2s;
+}
+
+.BoMonList:hover {
+    box-shadow: 0 10px 10px -10px #00000080;
+}
+
+.BoMonList .Title-Topic {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.BoMonList .Name-lecture {
+}
+
+
+.listMessage {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#currentNav, #listTable, table td{
+    color: #083761;
+}
+
+.custom-size {
+    width: 90px;
+}
+
+.custom-size-sm {
+    width: 50px;
+}
+
+.custom-size-lg {
+    width: 200px;
+}
+
+.custom-size-mm {
+    width: 120px;
+}
+#currentNav {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.listTable {
+    font-weight: bold;
+    color: #083761;
+}
+
+.disabled-link {
+    pointer-events: none;
+    cursor: default;
+    color: gray;
+}

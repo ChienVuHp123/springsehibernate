@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>notify</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.js"></script>
+    <script src="/webjars/stomp.js/2.3.3/stomp.js"></script>
+
+    <link rel="stylesheet" href="/css/home_style.css">
+    <link rel="stylesheet" href="/assets/font/themify-icons/themify-icons.css">
+
+</head>
+<body>
+<script src="/js/home.js">
+</script>
+<div id="main">
+    <div th:fragment="navbar" id="header">
+        <!-- Begin: NAV -->
+        <ul id="nav">
+            <li><a href="">Logo</a></li>
+            <li><a th:href="@{/home}">Home</a></li>
+            <!--            <li><a th:href="@{/students}">Student Management</a></li>-->
+            <li th:if="${#lists.contains(roles, 'ROLE_Khoa')}">
+                <a th:href="@{/khoa}">Subject Management</a>
+            </li>
+            <li th:if="${#lists.contains(roles, 'ROLE_BoMon')}">
+                <a th:href="@{/bo-mon}">Lecturer Management</a>
+            </li>
+            <li th:if="${#lists.contains(roles, 'ROLE_GiangVien')}">
+                <a th:href="@{/students}">Student Management</a>
+            </li>
+            <li><a th:href="@{/notify/{lecturerId}(lecturerId=${accountId})}">Notification</a></li>
+        </ul>
+        <!-- End: NAV -->
+
+        <!-- Begin: Account button-->
+        <div class="Account-btn">
+            <!-- <i class="Account-icon ti-face-smile"></i> -->
+            <p style=" display: inline-block; color: white; margin-top: 6px;"
+               th:text="${realname}"></p>
+            <img src="/assets/img/avatar2.png" class="avatar-img" style="height: 40px; display: inline-block;">
+        </div>
+        <!-- End: Account Button-->
+    </div>
+
+    <div id = "content">
+        <div id="currentNav"></div>
+        <div class="main-page">
+            <div class="header-section">
+                <div class="name-header">
+                    <h3>Thông báo</h3>
+                </div>
+            </div>
+            <div class="content-section">
+                <ul>
+<!--                    <th:block th:each="notification : ${notifications}">-->
+<!--                        <li th:text="${notification.content}"></li>-->
+<!--                    </th:block>-->
+
+                    <li class="listMessage" th:each="notification : ${notifications}">
+                        <div  class="GiangVienDoAn">
+                            <p Class="Title-Topic" th:text="${notification.content}"></p>
+                            <p Class="Name-lecture"></p>
+                            <p class="Time-send" th:text="${#dates.format(T(java.util.Date).from(notification.createdAt.atZone(T(java.time.ZoneId).systemDefault()).toInstant()), 'dd/MM/yyyy HH:mm')}"></p>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
