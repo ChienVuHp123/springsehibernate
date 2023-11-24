@@ -1,24 +1,23 @@
 package com.example.springsehibernate.Controller;
 
 import com.example.springsehibernate.Entity.*;
-import com.example.springsehibernate.Repository.MessageRepository;
-import com.example.springsehibernate.Repository.StudentRepository;
-import com.example.springsehibernate.Service.NotificationService;
-import com.example.springsehibernate.Service.StudentService;
-import com.example.springsehibernate.Service.UserService;
+import com.example.springsehibernate.Repository.*;
+import com.example.springsehibernate.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/khoa")
@@ -28,18 +27,50 @@ public class KhoaController {
     private StudentRepository studentRepository;
 
     @Autowired
+    private StudentVersionRepository studentVersionRepository;
+
+    @Autowired
     private MessageRepository messageRepository;
+
+    @Autowired
+    private ConfirmTableRepository confirmTableRepository;
+
+    @Autowired
+    private TimePhaseRepository timePhaseRepository;
 
     @Autowired
     private NotificationService notificationService;
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private StudentVersionService studentVersionService;
+
+    @Autowired
+    private TimePhaseService timePhaseService;
+
+    @Autowired
+    private QualifiedGraduateService qualifiedGraduateService;
+
     @GetMapping("/list/{departmentID}")
     public String getList(@PathVariable("departmentID") Long departmentID, Model model) {
 
-        List<Student> students = studentRepository.findByLecturerID(departmentID);
+        // Lấy danh sách studentVersion dựa trên departmentID
+        List<StudentVersion> confirmList = studentVersionService.getStudentVersionByStudent_Lecturer_Department_DepartmentIdAndVersionType(departmentID, "Bộ môn");
+
+        // Dựa trên danh sách confirmations, lấy danh sách sinh viên liên quan
+        List<Student> students = confirmList.stream()
+                .map(StudentVersion::getStudent)
+                .collect(Collectors.toList());
+
         model.addAttribute("students", students);
+//        LocalDate currentDate = LocalDate.now();
+        LocalDate currentDate = LocalDate.of(2023, 9, 10); // Thiết lập ngày là 28/10/2023
+
+        String showColumn = timePhaseService.getPhaseColumn(currentDate);
+
+        // Thêm biến showColumn vào model để truyền tới view
+        model.addAttribute("showColumn", showColumn);
         return "listView"; // "listView" là tên file view (Thymeleaf template) bạn muốn render
     }
 
@@ -49,33 +80,69 @@ public class KhoaController {
                               RedirectAttributes redirectAttributes) {
         UserDetails senderDetails = (UserDetails) authentication.getPrincipal();
         User currentUser = userService.findByUsername(senderDetails.getUsername());
+        Long currentKhoaId = currentUser.getOwnerId(); // Giả sử bạn lưu ID của khoa ở trường này
+        String currentAcademicYear = AcademicYearUtil.getCurrentAcademicYear();
+        int currentSemester = AcademicYearUtil.getCurrentSemester();
 
 
         Optional<Message> optionalMessage = messageRepository.findById(messageId);
+
         if (optionalMessage.isPresent()) {
             Message message = optionalMessage.get();
             message.setStatusEnum(MessageStatus.ACCEPTED);
             messageRepository.save(message);
 
-//            if (message.getStatusEnum() == MessageStatus.ACCEPTED) {
-//                // Lấy senderId từ message
-//                Long senderId = message.getSenderId();
-//
-//                // Tìm tất cả sinh viên có lecturerID = senderId
-//                List<Student> studentsToConfirm = studentService.findByLecturerID(senderId);
-//
-//
-//                // Thêm các sinh viên vào ConfirmTable và cập nhật thông tin cho sinh viên
-//                for (Student student : studentsToConfirm) {
-////                    student.setConfirmTable(confirmTable);
-//                    ConfirmTable confirmTable = new ConfirmTable();
-//                    confirmTable.setLecturerId(student.getLecturerID());
-//                    confirmTable.setStudent(student);
-//                    confirmTable.setDepartmentId(currentUser.getUserID());
-//                    confirmTableRepository.save(confirmTable);
+            if (message.getStatusEnum() == MessageStatus.ACCEPTED) {
+                // Lấy senderId từ message
+                Long senderId = message.getSenderId();
+
+                // Danh sách thêm vào từ Bộ Môn
+                List<StudentVersion> studentVersionsConfirmByDepartment
+                        = studentVersionService
+                        .getStudentVersionByAcademicYearAndSemesterAndVersionTypeAndLecturer_Department_DepartmentId(currentAcademicYear,
+                                currentSemester,"Bộ môn", senderId);
+
+                // Danh sách được update vào Khoa
+                List<StudentVersion> studentVersionsConfirmByFaculty
+                        = studentVersionRepository
+                        .findByVersionTypeAndLecturer_Department_DepartmentIdAndAcademicYearAndSemester("Khoa",
+                                senderId, currentAcademicYear, currentSemester);
+
+                //Xóa danh sách trong khoa
+                studentVersionRepository.deleteAll(studentVersionsConfirmByFaculty);
+
+                for (StudentVersion studentVersion : studentVersionsConfirmByDepartment) {
+                    StudentVersion svTemp = studentVersionRepository.findByVersionTypeAndAcademicYearAndSemesterAndStudentID("Khoa", currentAcademicYear, currentSemester, studentVersion.getStudentID());
+                    if (svTemp != null) {
+                        studentVersionRepository.delete(svTemp);
+                    }
+                    StudentVersion newStudentVersion = new StudentVersion();
+                    newStudentVersion.setStudent(studentVersion.getStudent());
+                    newStudentVersion.setVersionType("Khoa");
+                    newStudentVersion.setVersionDate(new Date());
+                    studentVersionService.updateVersionWithStudentDataDepartment(newStudentVersion, studentVersion);
+                    studentVersionService.save(newStudentVersion);
+                }
+
+//                for (StudentVersion studentVersion : studentVersionsConfirmByDepartment) {
+//                    StudentVersion studentVersion1
+//                            = studentVersionService.
+//                            getStudentVersionByVersionType_Student_Lecturer_Department_DepartmentIdAndStudent_Lecturer_Department_FacultyId("Khoa", senderId, currentKhoaId);
+//                    if (studentVersion1 == null || !studentVersion1.StudentVersionEqual(studentVersion)) {
+//                        if (studentVersion1 == null) {
+//                            studentVersion1 = new StudentVersion();
+//                            studentVersion1.setStudent(studentVersion.getStudent());
+//                            studentVersion1.setVersionType("Khoa");
+//                            studentVersion1.setVersionDate(new Date());
+//                        }
+//                        studentVersionService.updateVersionWithStudentDataDepartment(studentVersion1, studentVersion);
+//                        studentVersionService.save(studentVersion1);
+//                    }
 //                }
 
-           // }
+
+
+            }
 
             Long senderId = message.getSenderId();
             // Gửi thông báo cho user Bộ Môn sau khi cập nhật trạng thái
@@ -101,4 +168,38 @@ public class KhoaController {
         }
         return "redirect:/khoa";
     }
+
+    @GetMapping("/send-confirm-list")
+    public String getSendConfirmList(Model model,Authentication authentication,
+                                     RedirectAttributes redirectAttributes) {
+        UserDetails senderDetails = (UserDetails) authentication.getPrincipal();
+        User currentUser = userService.findByUsername(senderDetails.getUsername());
+
+//        List<StudentVersion> confirmedStudents = studentVersionService.getStudentVersionByVersionTypeAndStudent_Lecturer_Department_FacultyId("Khoa", currentUser.getUserID());
+       List<StudentVersion> confirmedStudents = studentVersionRepository.findByVersionTypeAndAcademicYearAndSemester("Khoa", AcademicYearUtil.getCurrentAcademicYear(), AcademicYearUtil.getCurrentSemester());
+        model.addAttribute("confirmedStudents", confirmedStudents);
+//        LocalDate currentDate = LocalDate.now();
+        LocalDate currentDate = LocalDate.of(2023, 9, 10); // Thiết lập ngày là 28/10/2023
+
+        String showColumn = timePhaseService.getPhaseColumn(currentDate);
+
+        // Thêm biến showColumn vào model để truyền tới view
+        model.addAttribute("showColumn", showColumn);
+        return "send-confirm-list";
+    }
+
+
+    @GetMapping("/TimePhase")
+    public String getTimePhase(Model model) {
+        model.addAttribute("timePhase", new TimePhase());
+        return "time-phase";
+    }
+    @PostMapping("/setTimePhase")
+    public String saveTimePhase(@ModelAttribute TimePhase timePhase, RedirectAttributes redirectAttributes) {
+        timePhaseRepository.save(timePhase);
+        redirectAttributes.addFlashAttribute("successMessage", "Thời gian giai đoạn đã được cập nhật!");
+        return "redirect:/khoa/TimePhase";
+    }
+
+
 }

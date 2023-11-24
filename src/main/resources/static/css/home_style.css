@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
 * {
     padding: 0;
     margin: 0;
@@ -5,7 +6,7 @@
 }
 
 html {
-    font-family:  Helvetica,Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;
     color: #083761;
 }
 
@@ -66,6 +67,54 @@ html {
 
 }
 
+#nav li .dropdown-content {
+    display: none; /* Ẩn menu con mặc định */
+    position: absolute; /* Định vị menu con liên quan đến item cha của nó */
+    background-color: #f9f9f9; /* Màu nền cho menu con */
+    min-width: 160px; /* Chiều rộng tối thiểu của menu con */
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Đổ bóng cho menu con */
+    border-radius: 0 0 10px 10px; /* Bo góc cho phần dưới cùng của menu con */
+    z-index: 100; /* Đảm bảo menu con hiển thị trên các phần tử khác */
+}
+
+#nav > li:hover .dropdown-content {
+    display: block; /* Hiển thị menu con khi di chuột qua item cha */
+}
+
+#nav li .dropdown-content a {
+    color: black; /* Màu chữ cho các mục trong menu con */
+    padding: 12px 16px; /* Padding cho các mục */
+    text-decoration: none; /* Loại bỏ gạch chân */
+    display: block; /* Hiển thị mỗi mục trên một dòng riêng */
+}
+
+#nav li .dropdown-content a:hover {
+    background-color: #ddd; /* Màu nền khi di chuột qua mục trong menu con */
+}
+
+/* Style cho dropdown-subnav để định vị subnav */
+.dropdown-subnav {
+    position: relative; /* Cần thiết để định vị subnav content */
+}
+
+/* Style cho dropdown-subnav-content */
+.dropdown-subnav-content {
+    display: none;
+    position: absolute;
+    left: 100%; /* Đặt subnav bên phải của item gốc */
+    top: 0; /* Căn subnav với đỉnh của item gốc */
+    background-color: #f9f9f9; /* Màu nền cho subnav */
+    min-width: 180px; /* Chiều rộng tối thiểu của subnav */
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Đổ bóng cho subnav */
+    z-index: 101; /* Đảm bảo subnav hiển thị trên menu cha */
+}
+
+/* Hiển thị dropdown-subnav-content khi di chuột qua */
+.dropdown-subnav:hover .dropdown-subnav-content {
+    display: block;
+}
+
+
 #header .Account-btn {
     float: right;
     /* line-height: 46px; */
@@ -83,8 +132,10 @@ html {
 }
 #content .main-page {
     background-color: white;
-    padding: 5px 5px 70vh 5px;
+    padding: 5px;
+    min-height: 80vh;
     border-radius: 10px;
+    overflow: auto;
 }
 
 .main-page .header-section {
@@ -100,9 +151,9 @@ html {
 table {
     border-collapse: collapse;
     font-size: 0.9em;
-    width: 100%;
     border-radius: 5px 5px 0 0;
-    overflow: hidden;
+    table-layout: fixed; /* Đảm bảo chiều rộng cố định cho các cột */
+    width: 100%; /* Cho phép bảng mở rộng hoặc thu hẹp dựa trên nội dung */
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
@@ -128,6 +179,52 @@ table tbody tr:nth-of-type(even) {
 table tbody tr:last-of-type {
     border-bottom: 2px solid #083761;
 }
+
+/* Thêm CSS cho cột cố định */
+.sticky-col {
+    position: sticky;
+    z-index: 1;
+}
+/* Màu nền khác nhau cho th và td */
+table thead th.sticky-col {
+    background-color: #083761; /* Màu nền cho cột tiêu đề */
+}
+
+table tbody td.sticky-col {
+    background-color: white; /* Màu nền cho cột dữ liệu */
+    left: 0; /* Điều chỉnh dựa trên chiều rộng của các cột */
+}
+
+/* Điều chỉnh vị trí cố định cho từng cột */
+.sticky-col.first {
+    left: 0;
+}
+
+.sticky-col.second {
+    left: 100px; /* Thay đổi giá trị này dựa trên chiều rộng của cột "Mã Sinh Viên" */
+}
+
+.sticky-col.third {
+    right: 0;
+}
+
+/* Cho phép cuộn ngang cho bảng */
+.table-container {
+    overflow-x: auto;
+    max-width: 100%;
+}
+.custom-size-sm {
+    width: 100px;
+}
+
+.custom-size {
+    width: 150px;
+}
+
+.custom-size-lg {
+    width: 200px;
+}
+
 
 
 .add-icon {
@@ -261,26 +358,40 @@ table tbody tr:last-of-type {
     list-style-type: none;
     padding-left: 0;
 }
+/*css cho news*/
+.listNews {
+    list-style-type: none;
+    padding-left: 0;
+}
+.NewsItem {
+    border: 1px solid rgba(29,142,208,.5);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    padding: .5rem;
+    cursor: pointer;
+    transition: transform .2s;
+}
+
+.NewsItem:hover {
+    box-shadow: 0 10px 10px -10px #00000080;
+}
+
+.NewsItem .Title-News {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.NewsItem .Content-News {
+}
+/*kết thúc css cho news*/
+
 
 #currentNav, #listTable, table td{
     color: #083761;
 }
 
-.custom-size {
-    width: 90px;
-}
 
-.custom-size-sm {
-    width: 50px;
-}
-
-.custom-size-lg {
-    width: 200px;
-}
-
-.custom-size-mm {
-    width: 120px;
-}
 #currentNav {
     font-size: 16px;
     font-weight: bold;
@@ -296,3 +407,203 @@ table tbody tr:last-of-type {
     cursor: default;
     color: gray;
 }
+
+.phaseContent {
+    display: flex;
+    align-items: center;  /* Căn giữa theo chiều dọc */
+    padding: 10px;       /* Thêm một chút không gian xung quanh nội dung */
+}
+
+.vertical-line {
+    border-left: 2px solid black;
+    height: 100%;
+    margin-left: 10px;   /* Cách thẻ p một khoảng cách */
+}
+
+.phaseContent p {
+    margin: 0;           /* Loại bỏ khoảng cách mặc định của thẻ p */
+    padding-right: 10px; /* Thêm một chút không gian giữa thẻ p và đường thẳng */
+}
+
+.file-section {
+    padding: .5rem;
+    border: 1px solid #B3B3B3;
+}
+
+.file-section .title-file-section {
+    border-bottom: 1px solid #B3B3B3;
+}
+
+.file-section .content-file-section {
+    border: 1px solid #B3B3B3;
+}
+
+/*Css cho form upload file*/
+#uploadForm {
+    max-width: 500px; /* Giới hạn chiều rộng tối đa của form */
+    margin: 0 auto; /* Căn giữa form */
+    padding: 15px; /* Thêm padding cho form */
+    border: 1px solid #ccc; /* Viền cho form */
+    border-radius: 5px; /* Bo góc của form */
+    background-color: #f9f9f9; /* Màu nền cho form */
+}
+
+.form-group {
+    margin-bottom: 15px; /* Khoảng cách giữa các nhóm form */
+}
+
+.form-group label {
+    display: block; /* Hiển thị label trên một dòng riêng */
+    margin-bottom: 5px; /* Khoảng cách giữa label và input */
+}
+
+.form-group input[type="file"],
+.form-group select {
+    width: 100%; /* Chiều rộng tối đa cho input và select */
+    padding: 5px; /* Padding cho input và select */
+    border: 1px solid #ddd; /* Viền cho input và select */
+    border-radius: 3px; /* Bo góc cho input và select */
+}
+
+.form-group button[type="submit"] {
+    width: 100%; /* Chiều rộng tối đa cho nút submit */
+    padding: 10px; /* Padding cho nút submit */
+    border: none; /* Loại bỏ viền nút submit */
+    border-radius: 3px; /* Bo góc nút submit */
+    background-color: #007bff; /* Màu nền nút submit */
+    color: white; /* Màu chữ nút submit */
+    cursor: pointer; /* Con trỏ chuột khi di chuyển qua nút submit */
+}
+
+.form-group button[type="submit"]:hover {
+    background-color: #0056b3; /* Thay đổi màu nền khi hover qua nút submit */
+}
+
+.button-submit-confirm {
+    display: inline-flex;
+    justify-content: flex-end; /* Căn các nút về phía bên phải */
+    gap: 10px; /* Khoảng cách giữa các nút */
+    margin-bottom: 10px;
+}
+
+.button-submit-confirm form {
+    margin: 0; /* Loại bỏ margin mặc định của form */
+}
+
+.button-submit-confirm button {
+    width: 100px; /* Đặt chiều rộng cố định cho mỗi nút */
+    flex-grow: 1; /* Cho phép nút mở rộng để lấp đầy không gian */
+}
+
+
+
+#studentsTable .datatable {
+    transition: opacity 0.3s ease; /* Hiệu ứng chuyển đổi mượt mà cho opacity */
+}
+
+#studentsTable .datatable:hover {
+    opacity: 0.8; /* Độ mờ tùy chỉnh khi di chuột qua */
+}
+
+/*css form đăng ký*/
+.signup-form-container {
+    max-width: 400px;
+    margin: 10px auto;
+    padding: 20px;
+    background-color: #f3f3f3;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.signup-form-container:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-10px);
+}
+
+/* Các quy tắc CSS khác cho form và các thành phần bên trong */
+
+.signup-form-container .signup-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.signup-form-container .form-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.signup-form-container .form-group {
+    margin-bottom: 15px;
+}
+
+.signup-form-container .signup-form input[type="text"],
+.signup-form-container .signup-form input[type="password"],
+.signup-form-container .signup-form input[type="number"],
+.signup-form-container .signup-form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px; /* Bo tròn các trường nhập liệu */
+    box-sizing: border-box;
+}
+
+.signup-form-container .signup-form input[type="text"]:focus,
+.signup-form-container .signup-form input[type="password"]:focus,
+.signup-form-container .signup-form input[type="number"]:focus,
+.signup-form-container .signup-form select:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.signup-form-container .submit-btn {
+    padding: 10px;
+    border: none;
+    border-radius: 10px; /* Bo tròn nút */
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.signup-form-container .submit-btn:hover {
+    background-color: #0056b3;
+}
+
+.signup-form-container .error-message {
+    color: red;
+    font-size: 0.8em;
+}
+
+/*css cho suggest list lecturer*/
+.suggestions-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ddd;
+    border-top: none; /* Nếu bạn muốn loại bỏ đường viền trên cùng */
+    max-height: 200px; /* Chiều cao tối đa của danh sách */
+    overflow-y: auto; /* Cho phép cuộn nếu danh sách quá dài */
+    position: absolute; /* Đảm bảo danh sách nằm ngay dưới trường nhập liệu */
+    width: 150px; /* Chiều rộng bằng với trường nhập liệu */
+    background-color: #fff;
+    z-index: 10; /* Đảm bảo nó nằm trên các phần tử khác */
+}
+
+.suggestions-list li {
+    padding: 5px 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.suggestions-list li:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+
+
+
+
+
+

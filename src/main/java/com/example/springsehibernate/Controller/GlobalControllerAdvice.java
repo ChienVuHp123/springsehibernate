@@ -50,7 +50,7 @@ public class GlobalControllerAdvice {
             User user = userService.findByUsername(userDetails.getUsername());
 
             if (user != null) {
-                return user.getUserID();
+                return user.getOwnerId();
             }
         }
         return null; // Hoặc giá trị mặc định khác tùy thuộc vào trường hợp của bạn.

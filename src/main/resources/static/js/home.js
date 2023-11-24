@@ -1,84 +1,43 @@
 
 
 function showInputRow() {
-    // const rows = document.querySelectorAll("#studentsTable tbody tr");
-    // document.querySelector("#inputRow td:first-child").textContent = rows.length;
+
 
         const inputRow = document.getElementById("inputRow");
 
         // Kiểm tra xem dòng có đang ẩn hay không
         if (inputRow.style.display === "none" || inputRow.style.display === "") {
             inputRow.style.display = "table-row"; // Hiển thị dòng
+
+            // Hiển thị cột giảng viên 1 và 2
+            document.querySelectorAll(".firstAdvisorColumn").forEach(function(column) {
+                column.style.display = '';
+            });
+            document.querySelectorAll(".secondAdvisorColumn").forEach(function(column) {
+                column.style.display = '';
+            });
+            // Ẩn cột giảng viên chung
+            document.querySelectorAll(".advisorColumn").forEach(function(column) {
+                column.style.display = 'none';
+            });
         } else {
             inputRow.style.display = "none"; // Ẩn dòng
+            // Ẩn cột giảng viên 1 và 2
+            document.querySelectorAll(".firstAdvisorColumn").forEach(function(column) {
+                column.style.display = 'none';
+            });
+            document.querySelectorAll(".secondAdvisorColumn").forEach(function(column) {
+                column.style.display = 'none';
+            });
+            // Hiển thị cột giảng viên chung
+            document.querySelectorAll(".advisorColumn").forEach(function(column) {
+                column.style.display = '';
+            });
         }
 
 
 }
 
-// function addStudent() {
-//     const ID = document.getElementById("IDInput").value;
-//     const name = document.getElementById("nameInput").value;
-//     const birth = document.getElementById("birthInput").value;
-//     const DTBC = document.getElementById("DTBCInput").value;
-//     const topic = document.getElementById("topicInput").value;
-//     const instructors = document.getElementById("instructorsInput").value;
-//     const university = document.getElementById("universityInput").value;
-//     const lecturerReview = document.getElementById("lecturerReviewInput").value;
-//     const lecturerReviewWorkSpace = document.getElementById("lecturerReviewWorkSpaceInput").value;
-//
-//     // Create new row and cells
-//     const newRow = document.createElement("tr");
-//     const IDCell = document.createElement("td");
-//     const nameCell = document.createElement("td");
-//     const birthCell = document.createElement("td");
-//     const DTBCCell = document.createElement("td");
-//     const topicCell = document.createElement("td");
-//     const instructorsCell = document.createElement("td");
-//     const universityCell = document.createElement("td");
-//     const lecturerReviewCell = document.createElement("td");
-//     const lecturerReviewWorkSpaceCell = document.createElement("td");
-//
-//     // Set the text for the new cells
-//     // numberCell.textContent = document.querySelector("#inputRow td:first-child").textContent;
-//     IDCell.textContent = ID;
-//     nameCell.textContent = name;
-//     birthCell.textContent = birth;
-//     DTBCCell.textContent = DTBC;
-//     topicCell.textContent = topic;
-//     instructorsCell.textContent = instructors;
-//     universityCell.textContent = university;
-//     lecturerReviewCell.textContent = lecturerReview;
-//     lecturerReviewWorkSpaceCell.textContent = lecturerReviewWorkSpace;
-//
-//     // Append the cells to the new row
-//     newRow.appendChild(IDCell);
-//     newRow.appendChild(nameCell);
-//     newRow.appendChild(birthCell);
-//     newRow.appendChild(DTBCCell);
-//     newRow.appendChild(topicCell);
-//     newRow.appendChild(instructorsCell);
-//     newRow.appendChild(universityCell);
-//     newRow.appendChild(lecturerReviewCell);
-//     newRow.appendChild(lecturerReviewWorkSpaceCell);
-//
-//     // Insert the new row before the input row
-//     const inputRow = document.getElementById("inputRow");
-//     document.getElementById("studentsTable").tBodies[0].insertBefore(newRow, inputRow);
-//
-//     // Clear input fields and hide row
-//     document.getElementById("IDInput").value = "";
-//     document.getElementById("nameInput").value = "";
-//     document.getElementById("birthInput").value = "";
-//     document.getElementById("DTBCInput").value = "";
-//     document.getElementById("topicInput").value = "";
-//     document.getElementById("instructorsInput").value = "";
-//     document.getElementById("universityInput").value = "";
-//     document.getElementById("lecturerReviewInput").value = "";
-//     document.getElementById("lecturerReviewWorkSpaceInput").value = "";
-//     document.getElementById("inputRow").style.display = "none";
-//
-// }
 
 function deleteRow(element) {
     const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
@@ -109,57 +68,6 @@ function deleteRow(element) {
     // updateOrderNumbers();
 }
 
-// function editStudent(button) {
-//     const studentId = button.getAttribute("th:data-id");
-//     const modal = document.getElementById("editStudentModal");
-//     const studentNameInput = document.getElementById("studentName");
-//     const studentIdInput = document.getElementById("studentId");
-//
-//     // Gửi yêu cầu lấy thông tin sinh viên theo studentId
-//     // Sau khi nhận được thông tin, điền vào form và mở modal
-//     // Đảm bảo bạn đã lấy đúng thông tin cần thiết từ phản hồi
-//     // Ví dụ: studentNameInput.value = student.name;
-//
-//     // Mở modal
-//     modal.style.display = "block";
-// }
-//
-// function closeModal() {
-//     const modal = document.getElementById("editStudentModal");
-//     modal.style.display = "none";
-// }
-// function updateOrderNumbers() {
-//     const rows = document.querySelectorAll("#studentsTable tbody tr:not(#inputRow)");
-//     for (let i = 0; i < rows.length; i++) {
-//         rows[i].querySelector("td:first-child").textContent = i + 1;
-//     }
-// }
-
-function downloadCSV(csv, filename) {
-    var csvFile;
-    var downloadLink;
-
-    // CSV FILE
-    csvFile = new Blob([csv], {type: "text/csv"});
-
-    // Download link
-    downloadLink = document.createElement("a");
-
-    // File name
-    downloadLink.download = filename;
-
-    // We have to create a link to the file
-    downloadLink.href = window.URL.createObjectURL(csvFile);
-
-    // Make sure that the link is not displayed
-    downloadLink.style.display = "none";
-
-    // Add the link to your DOM
-    document.body.appendChild(downloadLink);
-
-    // Lanch the download
-    downloadLink.click();
-}
 
 function exportTableToCSV(filename) {
     var csv = [];
@@ -168,15 +76,54 @@ function exportTableToCSV(filename) {
     for (var i = 0; i < rows.length; i++) {
         var row = [], cols = rows[i].querySelectorAll("td, th");
 
-        for (var j = 0; j < cols.length-1; j++)
-            row.push(cols[j].innerText);
+        for (var j = 0; j < cols.length-1; j++) {
+            // Kiểm tra xem cột có đang được hiển thị không
+            if (cols[j].style.display !== 'none') {
+                row.push('"' + cols[j].innerText + '"');
+            }
+        }
 
-        csv.push(row.join(","));
+        if (row.length > 0) {
+            csv.push(row.join(","));
+        }
     }
 
-    // Download CSV
+    // Nếu không có dữ liệu để xuất, thoát khỏi hàm
+    if (csv.length === 0) {
+        return;
+    }
+
+    // Tiến hành tải xuống CSV
     downloadCSV(csv.join("\n"), filename);
 }
+
+
+function downloadCSV(csv, filename) {
+    var csvFile;
+    var downloadLink;
+
+    // CSV file
+    csvFile = new Blob([csv], {type: "text/csv"});
+
+    // Download link
+    downloadLink = document.createElement("a");
+
+    // File name
+    downloadLink.download = filename;
+
+    // Create a link to the file
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+
+    // Hide download link
+    downloadLink.style.display = "none";
+
+    // Add the link to DOM
+    document.body.appendChild(downloadLink);
+
+    // Click download link
+    downloadLink.click();
+}
+
 
 function tableToJson(table) {
     const rows = Array.from(table.querySelectorAll('tr'));
@@ -249,6 +196,21 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+// listenEvent cho thẻ div NewsItem
+document.addEventListener("DOMContentLoaded", function() {
+    // Lấy tất cả các div với class NewsItem
+    const newsItems = document.querySelectorAll(".NewsItem");
+
+    // Thêm sự kiện click cho mỗi div
+    newsItems.forEach(newsItem => {
+        newsItem.addEventListener("click", function() {
+            // Lấy giá trị ID từ thuộc tính data-id
+            const newsID = this.getAttribute("data-id");
+            // Chuyển hướng đến trang chi tiết tin tức
+            window.location.href = `/home/news/${newsID}`;
+        });
+    });
+});
 
 
 $(document).ready(function () {
@@ -260,26 +222,86 @@ $(document).ready(function () {
         var href = $(this).attr('href');
         $.get(href, function (student) {
             console.log(student)
-            $('#IdEdit').val(student.id);   // assuming your student object has 'id' in lowercase
+            $('#hiddenId').val(student.id);
+            $('#IdEdit').val(student.studentID);   // assuming your student object has 'id' in lowercase
             $('#NameEdit').val(student.name);
             $('#BirthEdit').val(student.dateOfBirth);
             $('#DTBCEdit').val(student.dtbc);
             $('#TopicEdit').val(student.thesistopics);
+            $('#NewTopicEdit').val(student.newTopics);
             $('#lecturerEdit').val(student.namelecturer);
+            $('#secondLecturerEdit').val(student.namesecondlecturer);
             $('#UniversityEdit').val(student.university);
             $('#lecturerReviewEdit').val(student.lecturerReviewer);
             $('#lecturerReviewWorkSpaceEdit').val(student.lecturerReviewerWorkplace);
-
+            $('#secondLecturerReviewEdit').val(student.secondLecturerReviewer);
+            $('#secondLecturerReviewWorkSpaceEdit').val(student.secondLecturerReviewerWorkplace);
+            $('#StatusEdit').val(student.status);
         })
-            // .fail(function() {
-            //     alert("Student not found.");
-            // })
-            // .always(function() {
-            //     $('#editModal').modal('show');
-            // });
         $('#editModal').modal('show');
     });
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Đảm bảo hàm submitForm khả dụng khi DOM được tải đầy đủ
+    const saveButton = document.getElementById("saveButton");
+    saveButton.addEventListener("click", submitForm);
+});
+
+// Hàm này sẽ trả về giá trị của phần tử nếu nó tồn tại, hoặc null nếu không.
+const getElementValue = (id) => {
+    const element = document.getElementById(id);
+    return element ? element.value : null;
+};
+
+
+function submitForm() {
+
+    const updateStudentForm = document.getElementById("updateStudentForm");
+    const formData = new FormData(updateStudentForm);
+
+    const id = document.getElementById("hiddenId").value; // Lấy ID từ trường ẩn
+    const csrfToken = document.querySelector('input[name="_csrf"]').value;
+    const academicYear = document.getElementById('academicYear').value;
+    const semester = document.getElementById('semester').value;
+    const url = `/students/${id}?academicYear=${academicYear}&semester=${semester}`;
+    fetch(url, { // Sử dụng studentId như một phần của URL
+        method: 'PUT',
+        headers: {
+            'X-CSRF-Token': csrfToken // Đính kèm token CSRF ở đây
+        },
+        body: formData // FormData bao gồm cả dữ liệu và tập tin
+    })
+        .then(response => response.json())
+        .then(data => {
+            if(data.status === 'success') {
+                showSuccessModal();
+                // location.reload();
+            } else {
+                showfailureModal();
+            }
+        })
+        .catch(error => {
+            console.error('There was an error!', error);
+        });
+}
+function showSuccessModal() {
+    $('#successEditModal').modal('show');
+
+    $('#successEditModal').on('hidden.bs.modal', function (e) {
+        location.reload();
+    });
+}
+function showfailureModal() {
+    $('#failureModal').modal('show');
+
+    $('#failureModal').on('hidden.bs.modal', function (e) {
+        location.reload();
+    });
+}
+
+
+
 
 // function checkAndHideButton() {
 //     var showColumns = /*[# th:utext="${showColumns}"]*/false/*[/]*/; // Lấy giá trị từ Thymeleaf
@@ -294,6 +316,117 @@ $(document).ready(function () {
 // document.addEventListener("DOMContentLoaded", function() {
 //     checkAndHideButton();
 // });
+
+function confirmAndSubmit() {
+    var isConfirmed = confirm("Danh sách sau khi xác nhận sẽ không thể thay đổi được nữa. Bạn có chắc chắn muốn tiếp tục không?");
+    if (isConfirmed) {
+        // Gửi form nếu người dùng xác nhận
+        return true;
+    } else {
+        // Hủy gửi form nếu người dùng không xác nhận
+        return false;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Mã để kiểm tra xem người dùng đã upload file lần đầu chưa
+    // Ví dụ, sử dụng localStorage cho mục đích demo
+    // $('#uploadModal').modal('show');
+    if (!localStorage.getItem("hasShownUploadModal")) {
+        // Hiển thị modal
+        $('#uploadModal').modal('show');
+        // Thiết lập flag trong localStorage
+        localStorage.setItem("hasShownUploadModal", true);
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Lắng nghe sự kiện click trên ảnh
+    document.querySelectorAll('.clickable-image').forEach(image => {
+        image.addEventListener('click', function() {
+            document.getElementById('modalImage').src = this.src; // Cập nhật src của ảnh trong modal
+            $('#imageModal').modal('show'); // Hiển thị modal
+        });
+    });
+});
+
+// show recomment list lecturer when input data
+$(document).ready(function() {
+    var isLecturerSelected = false;
+    var isSecondLecturerSelected = false;
+
+    // Xử lý nhập liệu và hiển thị danh sách gợi ý cho instructorsInput
+    $('#instructorsInput').keyup(function() {
+        isLecturerSelected = false;
+        var query = $(this).val();
+
+        if (query != '') {
+            $.ajax({
+                url: "/students/suggestions",
+                method: "GET",
+                data: {query: query},
+                success: function(data) {
+                    $('#lecturerList').fadeIn();
+                    $('#lecturerList').html(data);
+                }
+            });
+        } else {
+            $('#lecturerList').fadeOut();
+        }
+    });
+
+    // Xử lý nhập liệu và hiển thị danh sách gợi ý cho secondInstructorsInput
+    $('#secondInstructorsInput').keyup(function() {
+        isSecondLecturerSelected = false;
+        var query = $(this).val();
+
+        if (query != '') {
+            $.ajax({
+                url: "/students/suggestions",
+                method: "GET",
+                data: {query: query},
+                success: function(data) {
+                    $('#secondLecturerList').fadeIn();
+                    $('#secondLecturerList').html(data);
+                }
+            });
+        } else {
+            $('#secondLecturerList').fadeOut();
+        }
+    });
+
+    // Xử lý chọn mục từ danh sách gợi ý
+    $(document).on('click', '.suggestions-list li', function() {
+        var inputTarget = $(this).closest('.suggestions-list').data('input-target');
+        $(inputTarget).val($(this).text());
+        $(this).closest('.suggestions-list').fadeOut();
+
+        if(inputTarget === '#instructorsInput') {
+            isLecturerSelected = true;
+        } else if(inputTarget === '#secondInstructorsInput') {
+            isSecondLecturerSelected = true;
+        }
+    });
+
+    // Kiểm tra trước khi chuyển sang trường nhập liệu khác
+    $('input').on('focus', function() {
+        if($(this).attr('id') === 'instructorsInput' && !isLecturerSelected && $('#instructorsInput').val() !== '') {
+            alert('Vui lòng chọn giảng viên trong danh sách gợi ý hoặc xóa nhập liệu');
+            $('#instructorsInput').focus();
+        } else if($(this).attr('id') === 'secondInstructorsInput' && !isSecondLecturerSelected && $('#secondInstructorsInput').val() !== '') {
+            alert('Vui lòng chọn giảng viên trong danh sách gợi ý hoặc xóa nhập liệu');
+            $('#secondInstructorsInput').focus();
+        }
+    });
+});
+
+
+
+
+
+
+
+
 
 
 

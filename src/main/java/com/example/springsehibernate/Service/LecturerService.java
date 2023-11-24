@@ -18,4 +18,9 @@ public class LecturerService {
     public List<Lecturer> findAll() {
         return lecturerRepository.findAll();
     }
+
+    public List<Lecturer> findByNameContaining(String name) {
+        return lecturerRepository.findByNameContaining(name);
+    }
+
 }

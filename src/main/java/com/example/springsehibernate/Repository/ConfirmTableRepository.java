@@ -9,4 +9,8 @@ import java.util.List;
 @Repository
 public interface ConfirmTableRepository extends JpaRepository<ConfirmTable, Long> {
     public List<ConfirmTable> findByDepartmentId(Long DepartmentId);
+
+    List<ConfirmTable> findByFacultyId(Long facultyId);
+
+    ConfirmTable findByStudentIDAndLecturerId(Long StudentID, Long LecturerID);
 }

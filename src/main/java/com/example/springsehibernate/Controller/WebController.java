@@ -1,9 +1,10 @@
 package com.example.springsehibernate.Controller;
 
-import com.example.springsehibernate.Entity.Message;
-import com.example.springsehibernate.Entity.User;
+import com.example.springsehibernate.Entity.*;
+import com.example.springsehibernate.Repository.LecturerRepository;
 import com.example.springsehibernate.Repository.MessageRepository;
 import com.example.springsehibernate.Service.MessageService;
+import com.example.springsehibernate.Service.NewsService;
 import com.example.springsehibernate.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -30,13 +33,19 @@ public class WebController {
     MessageService messageService;
 
     @Autowired
+    private NewsService newsService;
+    @Autowired
     MessageRepository messageRepository;
 
+    @Autowired
+    private LecturerRepository lecturerRepository;
+
     @GetMapping("/login")
-    public ModelAndView login() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("login.html");
-        return modelAndView;
+    public String login(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            return "redirect:/home";
+        }
+        return "login";
     }
 
 
@@ -55,11 +64,21 @@ public class WebController {
 
         UserDetails senderDetails = (UserDetails) authentication.getPrincipal();
         User sender = userService.findByUsername(senderDetails.getUsername());
+        Optional<Lecturer> lecturer = lecturerRepository.findById(sender.getOwnerId());
+
+        Optional<Message> lastMessage = messageRepository.findTopBySenderIdOrderBySentAtDesc(sender.getOwnerId());
+
+        if (lastMessage.isPresent() && MessageStatus.UNSEEN == lastMessage.get().getStatusEnum()) {
+            redirectAttributes.addFlashAttribute("errorSendMessages", "Bạn cần chờ cho đến khi danh sách trước đó đã được xem!");
+            return "redirect:/students";
+        }
 
         Message message = new Message();
-        message.setSenderId(sender.getUserID());
+        message.setSenderId(sender.getOwnerId());
         message.setSenderName(sender.getRealname());
-        message.setReceiverId(receiverId);
+        if (lecturer.isPresent()) {
+            message.setReceiverId(lecturer.get().getDepartment().getDepartmentId());
+        }
         message.setMessageContent(messageContent);
         message.setSentAt(LocalDateTime.now()); // Thiết lập thời gian gửi
         messageService.saveMessage(message);
@@ -73,34 +92,21 @@ public class WebController {
 
 
     @GetMapping("/bo-mon")
-    public ModelAndView homeBoMon(Model model, Authentication authentication) {
+    public String homeBoMon(Model model, Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = userService.findByUsername(userDetails.getUsername());
-
-        ModelAndView modelAndView = new ModelAndView();
-        List<Message> messages = messageService.getMessagesForUser(user.getUserID());
+        List<Message> messages = messageService.getMessagesForUser(user.getOwnerId());
         model.addAttribute("messages", messages);
-        modelAndView.setViewName("bo-mon.html");
-        return modelAndView;
+        return "bo-mon";
     }
 
     @GetMapping("/khoa")
-    public ModelAndView homeKhoa(Model model, Authentication authentication) {
+    public String homeKhoa(Model model, Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = userService.findByUsername(userDetails.getUsername());
-
-        ModelAndView modelAndView = new ModelAndView();
-        List<Message> messages = messageService.getMessagesForUser(user.getUserID());
+        List<Message> messages = messageService.getMessagesForUser(user.getOwnerId());
         model.addAttribute("messages", messages);
-        modelAndView.setViewName("khoa.html");
-        return modelAndView;
-    }
-
-    @GetMapping("/hello")
-    public ModelAndView hello() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("hello.html");
-        return modelAndView;
+        return "khoa";
     }
 
     @GetMapping("/notify")
@@ -110,29 +116,28 @@ public class WebController {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = userService.findByUsername(userDetails.getUsername());
 
-        modelAndView.addObject("accountId", user.getUserID());
+        modelAndView.addObject("accountId", user.getOwnerId());
         modelAndView.setViewName("notify.html");
 
         return modelAndView;
     }
     @GetMapping(value = {"/", "/home"})
-    public ModelAndView yourMethod(Model model, Authentication authentication) {
-        ModelAndView modelAndView = new ModelAndView();
+    public String home(Model model, Authentication authentication, HttpServletResponse response) {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = userService.findByUsername(userDetails.getUsername());
-
-        // Lấy danh sách roles
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
         List<String> roles = authorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-
-        model.addAttribute("accountId", user.getUserID());
-        model.addAttribute("roles", roles);  // thêm dòng này
-
-        modelAndView.setViewName("home.html");
-        return modelAndView;
+        model.addAttribute("accountId", user.getOwnerId());
+        model.addAttribute("roles", roles);
+        model.addAttribute("newsList", newsService.findAll());
+        if (roles.contains("ROLE_GIANGVIEN")) {
+            return "redirect:/giang-vien/home";
+        } else {
+            return "home";
+        }
     }
 
 

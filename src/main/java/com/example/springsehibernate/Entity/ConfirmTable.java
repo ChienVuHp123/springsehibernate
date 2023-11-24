@@ -21,8 +21,11 @@ public class ConfirmTable {
     @Column(name = "department_id")
     private Long departmentId;
 
-    @OneToOne
-    @JoinColumn(name = "student_id", referencedColumnName = "ID") // Chỉ định tên trường tương ứng
+    @Column(name = "faculty_id")
+    private Long facultyId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id", referencedColumnName = "ID")
     private Student student;
 
     @ManyToOne

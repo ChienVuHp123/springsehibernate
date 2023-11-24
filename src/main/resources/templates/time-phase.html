@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khoa</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="/css/home_style.css">
+    <link rel="stylesheet" href="/assets/font/themify-icons/themify-icons.css">
+
+
+</head>
+<body>
+<script src="/js/home.js">
+</script>
+<div id="main">
+    <!-- Include Navbar Fragment -->
+    <div th:replace="fragments/navbar :: navbar"></div>
+
+    <div id = "content">
+        <div id="currentNav"></div>
+        <div class="main-page">
+            <div class="header-section" style="color: #083761">
+            </div>
+            <div class="content-section">
+                <!-- Hiển thị thông báo flash nếu có -->
+                <div th:if="${successMessage}" class="alert alert-success">
+                    <span th:text="${successMessage}"></span>
+                </div>
+                <div>
+                                    <h4>Thiết lập Thời gian Giai đoạn</h4>
+                                    <form action="#" th:action="@{/khoa/setTimePhase}" th:object="${timePhase}" method="post">
+                                        <div>
+                                            <label for="phase1Start">Bắt đầu giai đoạn 1:</label>
+                                            <input type="date" th:field="*{phase1Start}" id="phase1Start" required>
+                                        </div>
+                                        <div>
+                                            <label for="phase1End">Kết thúc giai đoạn 1:</label>
+                                            <input type="date" th:field="*{phase1End}" id="phase1End" required>
+                                        </div>
+                                        <div>
+                                            <label for="phase2Start">Bắt đầu giai đoạn 2:</label>
+                                            <input type="date" th:field="*{phase2Start}" id="phase2Start" required>
+                                        </div>
+                                        <div>
+                                            <label for="phase2End">Kết thúc giai đoạn 2:</label>
+                                            <input type="date" th:field="*{phase2End}" id="phase2End" required>
+                                        </div>
+                                        <div>
+                                            <label for="phase3Start">Bắt đầu giai đoạn 3:</label>
+                                            <input type="date" th:field="*{phase3Start}" id="phase3Start" required>
+                                        </div>
+                                        <div>
+                                            <label for="phase3End">Kết thúc giai đoạn 3:</label>
+                                            <input type="date" th:field="*{phase3End}" id="phase3End" required>
+                                        </div>
+
+                                        <button type="submit">Lưu</button>
+                                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

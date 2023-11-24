@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Tin tức</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/home_style.css">
     <link rel="stylesheet" href="/assets/font/themify-icons/themify-icons.css">
 
@@ -14,49 +15,48 @@
 <script src="/js/home.js">
 </script>
 <div id="main">
-    <div th:fragment="navbar" id="header">
-        <!-- Begin: NAV -->
-        <ul id="nav">
-            <li><a href="">Logo</a></li>
-            <li><a th:href="@{/home}">Home</a></li>
-<!--            <li><a th:href="@{/students}">Student Management</a></li>-->
-            <li th:if="${#lists.contains(roles, 'ROLE_Khoa')}">
-                <a th:href="@{/khoa}">Subject Management</a>
-            </li>
-            <li th:if="${#lists.contains(roles, 'ROLE_BoMon')}">
-                <a th:href="@{/bo-mon}">Lecturer Management</a>
-            </li>
-            <li th:if="${#lists.contains(roles, 'ROLE_GiangVien')}">
-                <a th:href="@{/students}">Student Management</a>
-            </li>
-            <li><a th:href="@{'/notify/' + ${accountId}}">Notification</a></li>
-        </ul>
-
-        <!-- End: NAV -->
-
-        <!-- Begin: Account button-->
-        <div class="Account-btn">
-            <!-- <i class="Account-icon ti-face-smile"></i> -->
-            <p style=" display: inline-block; color: white; margin-top: 6px;"
-               th:text="${realname}"></p>
-            <img src="/assets/img/avatar2.png" class="avatar-img" style="height: 40px; display: inline-block;">
-        </div>
-        <!-- End: Account Button-->
-    </div>
+    <!-- Include Navbar Fragment -->
+    <div th:replace="fragments/navbar :: navbar"></div>
 
     <div id = "content">
         <div id="currentNav"></div>
         <div class="main-page">
             <div class="header-section">
-                <div class="name-header">
-
+                <div class="name-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="color: #083761" >Tin tức</h3>
+                    <!-- Nút để thêm tin tức chỉ hiện thị cho người dùng có vai trò 'KHOA' -->
+                    <form th:if="${roles.contains('ROLE_Khoa')}" action="home/news/add" method="get">
+                        <button type="submit" class="btn btn-primary">Thêm Tin Tức</button>
+                    </form>
                 </div>
-
-
             </div>
             <div class="content-section">
-                <p>ID của tài khoản hiện tại: <span th:text="${accountId}"></span></p>
-                <p>Roles của tài khoản hiện tại: <span th:text="${roles}"></span></p>
+                <!-- Lặp qua danh sách tin tức và hiển thị từng mục -->
+                <ul>
+                    <li class="listNews" th:each="news : ${newsList}" style="color: #083761">
+                        <div class="NewsItem" th:data-id="${news.id}">
+                            <p class="Title-News" th:text="${news.title}">Tiêu đề tin tức</p>
+<!--                            <p class="Content-News" th:text="${news.content}">Nội dung tin tức</p>-->
+                            <p class="Time-Published" th:text="${#dates.format(news.publishDate, 'dd/MM/yyyy HH:mm')}">Thời gian đăng</p>
+
+                            <div class="button-container" style="display: flex; gap: 10px;">
+                                <!-- Nút chỉnh sửa, chỉ hiển thị cho người dùng có vai trò KHOA -->
+                                <form th:if="${roles.contains('ROLE_Khoa')}" th:action="@{home/news/edit/{id}(id=${news.id})}" method="get">
+                                    <button type="submit" class="btn btn-primary">Chỉnh Sửa</button>
+                                </form>
+
+                                <!-- Nút xóa -->
+                                <form th:if="${roles.contains('ROLE_Khoa')}" th:action="@{/home/news/delete/{id}(id=${news.id})}" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn xóa tin tức này không?')">
+                                    <button type="submit" class="btn btn-danger">Xóa</button>
+                                </form>
+                            </div>
+
+
+                        </div>
+                    </li>
+                </ul>
+<!--                <p>ID của tài khoản hiện tại: <span th:text="${accountId}"></span></p>-->
+<!--                <p>Roles của tài khoản hiện tại: <span th:text="${roles}"></span></p>-->
             </div>
             <form th:action="@{/logout}" method="post">
                 <input type="submit" value="Sign Out"/>

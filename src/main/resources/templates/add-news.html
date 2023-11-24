@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm tin tức</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/home_style.css">
+    <link rel="stylesheet" href="/assets/font/themify-icons/themify-icons.css">
+
+
+</head>
+<body>
+<script src="/js/home.js">
+</script>
+<div id="main">
+    <!-- Include Navbar Fragment -->
+    <div th:replace="fragments/navbar :: navbar"></div>
+
+    <div id = "content">
+        <div id="currentNav"></div>
+        <div class="main-page">
+            <div class="header-section">
+                <div class="name-header">
+                    <h3 style="color: #083761">Thêm Tin Tức Mới</h3>
+                </div>
+            </div>
+            <div class="content-section">
+                    <form th:action="@{/home/news/add}" th:object="${news}" method="post" enctype="multipart/form-data">
+
+                        <div class="form-group" style="color: #083761">
+                            <label for="title">Tiêu đề:</label>
+                            <input type="text" id="title" name="title" class="form-control" placeholder="Nhập tiêu đề" required />
+                        </div>
+
+                        <div class="form-group" style="color: #083761">
+                            <label for="add-news-content">Nội dung:</label>
+                            <textarea id="add-news-content" name="content" class="form-control" rows="5" placeholder="Nhập nội dung" required></textarea>
+                        </div>
+
+                        <div class="form-group" style="color: #083761">
+                            <label for="add-news-file">Nội dung:</label>
+                            <input type="file" id="add-news-file" name="file" class="form-control"></input>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Thêm</button>
+                    </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.1.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

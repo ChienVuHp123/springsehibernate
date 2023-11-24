@@ -20,45 +20,27 @@
 <script src="/js/home.js">
 </script>
 <div style="position: relative; top: -23px" id="main">
-    <div th:fragment="navbar" id="header">
-        <!-- Begin: NAV -->
-        <ul id="nav">
-            <li><a href="">Logo</a></li>
-            <li><a th:href="@{/home}">Home</a></li>
-            <!--            <li><a th:href="@{/students}">Student Management</a></li>-->
-            <li th:if="${#lists.contains(roles, 'ROLE_Khoa')}">
-                <a th:href="@{/khoa}">Subject Management</a>
-            </li>
-            <li th:if="${#lists.contains(roles, 'ROLE_BoMon')}">
-                <a th:href="@{/bo-mon}">Lecturer Management</a>
-            </li>
-            <li th:if="${#lists.contains(roles, 'ROLE_GiangVien')}">
-                <a th:href="@{/students}">Student Management</a>
-            </li>
-            <li><a th:href="@{/notify/{lecturerId}(lecturerId=${accountId})}">Notification</a></li>
-        </ul>
-        <!-- End: NAV -->
-
-        <!-- Begin: Account button-->
-        <div class="Account-btn">
-            <!-- <i class="Account-icon ti-face-smile"></i> -->
-            <p style=" display: inline-block; color: white; margin-top: 6px;"
-               th:text="${realname}"></p>
-            <img src="/assets/img/avatar2.png" class="avatar-img" style="height: 40px; display: inline-block;">
-        </div>
-        <!-- End: Account Button-->
-    </div>
+    <!-- Include Navbar Fragment -->
+    <div th:replace="fragments/navbar :: navbar"></div>
 
     <div id = "content">
         <div id="currentNav"></div>
         <div class="main-page">
             <div class="header-section">
+                <div class="phaseContent">
+                    <p th:text="'Phase hiện tại: ' + ${showColumn}"></p>
+                    <div class="vertical-line"></div>
+                </div>
                 <div class="name-header">
                     <p class="listTable">Danh sách Sinh Viên</p>
                 </div>
             </div>
             <div class="content-section">
 
+                <!-- Hiển thị thông báo lỗi gửi messages nếu có -->
+                <div th:if="${errorSendMessages}" class="alert alert-danger" role="alert">
+                    <p th:text="${errorSendMessages}"></p>
+                </div>
                 <table>
                     <thead>
                     <tr>
@@ -67,20 +49,32 @@
                         <th>Ngày sinh</th>
                         <th>ĐTBC/TC học lại</th>
                         <th>Đề Tài</th>
+                        <th th:if="${showColumn == 'Phase2' || showColumn == 'Phase3'}" >Đề tài mới</th>
                         <th>Cán bộ hướng dẫn</th>
                         <th>Nơi công tác</th>
+                        <th th:if="${showColumn == 'Phase3'}">Giảng viên phản biện 1</th>
+                        <th th:if="${showColumn == 'Phase3'}">Nơi công tác</th>
+                        <th th:if="${showColumn == 'Phase3'}">Giảng viên phản biện 2</th>
+                        <th th:if="${showColumn == 'Phase3'}">Nơi công tác</th>
+                        <th th:if="${showColumn == 'Phase3'}">Trang thái</th>
                     </tr>
                     </thead>
                     <tbody>
                     <!-- Lặp qua danh sách sinh viên đã xác nhận -->
                     <tr th:each="student : ${confirmedStudents}">
-                        <td th:text="${student.student.ID}"></td>
-                        <td style="white-space: nowrap" th:text="${student.student.getName()}"></td>
-                        <td style="white-space: nowrap" th:text="${student.student.getDateOfBirth()}"></td>
-                        <td th:text="${student.student.dtbc}"></td>
-                        <td th:text="${student.student.getThesistopics()}"></td>
-                        <td th:text="${student.student.getNamelecturer()}"></td>
-                        <td th:text="${student.student.getUniversity()}"></td>
+                        <td th:text="${student.getStudentID()}"></td>
+                        <td  style="white-space: nowrap" th:text="${student.getName()}"></td>
+                        <td  style="white-space: nowrap" th:text="${student.getDateOfBirth()}"></td>
+                        <td  th:text="${student.dtbc}"></td>
+                        <td  th:text="${student.getThesistopics()}"></td>
+                        <td th:if="${showColumn == 'Phase2' || showColumn == 'Phase3'}" th:text="${student.newTopics}"></td>
+                        <td  th:text="${student.getNamelecturer()}"></td>
+                        <td th:text="${student.getUniversity()}"></td>
+                        <td th:if="${showColumn == 'Phase3'}" th:text="${student.lecturerReviewer}"></td>
+                        <td th:if="${showColumn == 'Phase3'}" th:text="${student.lecturerReviewerWorkplace}"></td>
+                        <td th:if="${showColumn == 'Phase3'}" th:text="${student.secondLecturerReviewer}"></td>
+                        <td th:if="${showColumn == 'Phase3'}" th:text="${student.secondLecturerReviewerWorkplace}"></td>
+                        <td th:if="${showColumn == 'Phase3'}" th:text="${student.status}"></td>
                     </tr>
                     </tbody>
                 </table>

@@ -5,6 +5,7 @@ import com.example.springsehibernate.Entity.Student;
 import com.example.springsehibernate.Repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,19 @@ public class StudentService {
         return studentRepository.findByLecturerID(lecturerID, pageable);
     }
 
+    public Page<Student> getStudentsByLecturerAndAcademicYear(Long lecturerId, String academicYear, PageRequest pageRequest) {
+        return studentRepository.findByLecturerIDAndAcademicYear(lecturerId, academicYear, pageRequest);
+    }
+
+    public Page<Student> getStudentsByLecturerAndAcademicYearAndSemester(Long lecturerId, String academicYear, int semester, PageRequest pageRequest) {
+
+        return studentRepository.findByLecturerIDAndAcademicYearAndSemester(lecturerId, academicYear, semester, pageRequest);
+    }
+
+
+    public List<Student> getStudentsByLecturerAndAcademicYearAndSemester(Long lecturerId, String academicYear, int semester) {
+        return studentRepository.findByLecturerIDAndAcademicYearAndSemester(lecturerId, academicYear, semester);
+    }
 
 
 

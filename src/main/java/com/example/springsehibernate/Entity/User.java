@@ -14,7 +14,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
     private String password;
-    private int OwnerID;
+
+    @Column(name = "OwnerID")
+    private Long ownerId;
 
     @Enumerated(EnumType.STRING)
     private RoleEnum role;
