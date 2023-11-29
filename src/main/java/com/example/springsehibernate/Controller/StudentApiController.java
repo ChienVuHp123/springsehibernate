@@ -33,6 +33,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -95,38 +96,71 @@ public class StudentApiController {
             // Lấy sinh viên từ cơ sở dữ liệu và cập nhật thông tin
             Student existingStudent = optionalStudent.get();
 
-            // Cập nhật thông tin từ đối tượng student được gửi từ form
             Long studentId = Long.parseLong(formData.get("IdEdit"));
             existingStudent.setStudentID(studentId);
-            existingStudent.setName(formData.get("NameEdit"));
-            // Chuyển đổi ngày sinh từ String sang LocalDate
+
+            String nameStudent = formData.get("NameEdit");
+            existingStudent.setName(nameStudent);
+
             String dobString = formData.get("BirthEdit");
-            LocalDate dateOfBirth = LocalDate.parse(dobString, DateTimeFormatter.ISO_LOCAL_DATE);
+            LocalDate dateOfBirth = null;
+            // Kiểm tra và phân tích cú pháp dobString
+            if (dobString != null && !dobString.isEmpty()) {
+                try {
+                    dateOfBirth = LocalDate.parse(dobString, DateTimeFormatter.ISO_LOCAL_DATE);
+                } catch (DateTimeParseException e) {
+                    dateOfBirth = null;
+                    e.printStackTrace();
+                }
+            }
+            if (dobString == null) {
+                dateOfBirth = null;
+            }
             existingStudent.setDateOfBirth(dateOfBirth);
-//            existingStudent.setThesistopics(student.getThesistopics());
-//            existingStudent.setNewTopics(student.getNewTopics());
-//            existingStudent.setDtbc(student.getDtbc());
-//            existingStudent.setNamelecturer(student.getNamelecturer());
-//            existingStudent.setNamesecondlecturer(student.getNamesecondlecturer());
-//            if (student.getNamesecondlecturer() != null) {
-//                Lecturer SecondLecturer = lecturerRepository.findByName(student.getNamesecondlecturer());
-//                if (SecondLecturer != null) {
-//                    existingStudent.setSecondLecturerId(SecondLecturer.getId());
-//                } else {
-//                    existingStudent.setSecondLecturerId(null); // Xử lý trường hợp không tìm thấy giảng viên
-//                }
-//            } else {
-//                existingStudent.setSecondLecturerId(null); // Xử lý khi student.getNamesecondlecturer() là null
-//            }
-//
-//            existingStudent.setUniversity(student.getUniversity());
-//            existingStudent.setLecturerReviewer(student.getLecturerReviewer());
-//            existingStudent.setLecturerReviewerWorkplace(student.getLecturerReviewerWorkplace());
-//            existingStudent.setSecondLecturerReviewer(student.getSecondLecturerReviewer());
-//            existingStudent.setSecondLecturerReviewerWorkplace(student.getSecondLecturerReviewerWorkplace());
-//            existingStudent.setStatus(student.getStatus());
 
+            String topicString = formData.get("TopicEdit");
+            existingStudent.setThesistopics(topicString);
 
+            String newTopicString = formData.get("NewTopicEdit");
+            existingStudent.setNewTopics(newTopicString);
+
+            Float dtbc = Float.parseFloat(formData.get("DTBCEdit"));
+            existingStudent.setDtbc(dtbc);
+
+            String nameLecturerString = formData.get("lecturerEdit");
+            existingStudent.setNamelecturer(nameLecturerString);
+
+            String nameSecondLecturerString = formData.get("secondLecturerEdit");
+            existingStudent.setNamesecondlecturer(nameSecondLecturerString);
+
+            if (nameSecondLecturerString != null) {
+                Lecturer SecondLecturer = lecturerRepository.findByName(nameSecondLecturerString);
+                if (SecondLecturer != null) {
+                    existingStudent.setSecondLecturerId(SecondLecturer.getId());
+                } else {
+                    existingStudent.setSecondLecturerId(null); // Xử lý trường hợp không tìm thấy giảng viên
+                }
+            } else {
+                existingStudent.setSecondLecturerId(null);
+            }
+
+            String uniString = formData.get("UniversityEdit");
+            existingStudent.setUniversity(uniString);
+
+            String lecturerRwSt = formData.get("lecturerReviewEdit");
+            existingStudent.setLecturerReviewer(lecturerRwSt);
+
+            String lecturerRwWorkSpaceSt = formData.get("lecturerReviewWorkSpaceEdit");
+            existingStudent.setLecturerReviewerWorkplace(lecturerRwWorkSpaceSt);
+
+            String lecturerSecondRw = formData.get("secondLecturerReviewEdit");
+            existingStudent.setSecondLecturerReviewer(lecturerSecondRw);
+
+            String lecturerSecondRwWorkspace = formData.get("secondLecturerReviewWorkSpaceEdit");
+            existingStudent.setSecondLecturerReviewerWorkplace(lecturerSecondRwWorkspace);
+
+            String status = formData.get("StatusEdit");
+            existingStudent.setStatus(status);
 
             // Xử lý tập tin tải lên
             if (fileUpload != null && !fileUpload.isEmpty()) {
@@ -166,14 +200,13 @@ public class StudentApiController {
     }
 
     private String uploadFileToDropbox(MultipartFile file) throws Exception {
-        // Làm mới accessToken nếu cần
+//        // Làm mới accessToken nếu cần
         String accessToken = getUpdatedAccessToken(dropboxConfig.getRefreshToken());
+        System.out.println(dropboxConfig.getRefreshToken());
         dropboxConfig.setAccessToken(accessToken);
         DbxRequestConfig config = DbxRequestConfig.newBuilder("uet-project-storage").build();
-        System.out.println(config);
 
         DbxClientV2 client = new DbxClientV2(config, dropboxConfig.getAccessToken());
-        System.out.println(client);
 
         try {
             FullAccount account = client.users().getCurrentAccount();
@@ -195,7 +228,7 @@ public class StudentApiController {
             // Handle the exception if the upload fails
             System.out.println("File upload failed.");
             e.printStackTrace();
-            return "0";
+            return "Error";
         }
     }
 

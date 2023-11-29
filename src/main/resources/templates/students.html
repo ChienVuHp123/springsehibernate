@@ -8,9 +8,9 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
     <title>Quản lý</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
 
     <!-- CSS for Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -27,9 +27,6 @@
     <!-- Latest JavaScript for Bootstrap 4 -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-
-
     <link rel="stylesheet" href="/assets/font/themify-icons/themify-icons.css">
 
     <script src="/js/home.js"></script>
@@ -41,26 +38,19 @@
     <div th:replace="fragments/navbar :: navbar"></div>
 
     <div id = "content">
-        <div id="currentNav"></div>
+        <div id="header-content">
+            <div id="currentNav"></div>
+        </div>
         <div class="main-page">
             <div class="header-section">
-                <div class="phaseContent">
-                    <p th:text="'Phase hiện tại: ' + ${showColumn}"></p>
-                    <div class="vertical-line"></div>
-                </div>
                 <div class="name-header">
-                    <h4 class="listTable" th:if="${#lists.contains(roles, 'ROLE_GiangVien')}">Danh sách Sinh Viên</h4>
+                    <h5 class="listTable" th:if="${#lists.contains(roles, 'ROLE_GiangVien')}">Danh sách Sinh Viên</h5>
+                    <div class="phaseContent">
+                        <p th:if="${showColumn} == 'Phase1'" th:text="'Đăng ký đồ án tốt nghiệp'"></p>
+                        <p th:if="${showColumn} == 'Phase2'" th:text="'Chỉnh sửa tên đề tài'"></p>
+                        <p th:if="${showColumn} == 'Phase3'" th:text="'Phân công phản biện'"></p>
+                    </div>
                 </div>
-
-                <!-- Sử dụng th:if để hiển thị thẻ div nếu showColumn không phải là 'Phase2' hoặc 'Phase3' -->
-                <div class="Add-new-section" th:if="${showColumn} == 'Phase1'">
-                    <button type="button" class="btn-add-new" onclick="showInputRow()">
-                        <i class="fas fa-plus"></i>
-                        Add New
-                    </button>
-                </div>
-
-
             </div>
 
             <!-- Hiển thị thông báo lỗi gửi messages nếu có -->
@@ -68,24 +58,34 @@
                 <p th:text="${errorSendMessages}"></p>
             </div>
             <div class="content-section">
-                <form th:action="@{/students}" method="get">
-                    <label for="academicYear">Năm học:</label>
-                    <select id="academicYear" name="academicYear">
-                        <!-- Option cho năm học hiện tại -->
-                        <option th:value="${currentAcademicYear}" th:selected="${selectedAcademicYear == currentAcademicYear}" th:text="${currentAcademicYear}"></option>
-                        <option value="2022-2023" th:selected="${selectedAcademicYear == '2022-2023'}">2022-2023</option>
-                        <option value="2021-2022" th:selected="${selectedAcademicYear == '2021-2022'}">2021-2022</option>
+                <div class="function-container">
+                    <form th:action="@{/students}" method="get">
+                        <label for="academicYear">Năm học:</label>
+                        <select id="academicYear" name="academicYear">
+                            <!-- Option cho năm học hiện tại -->
+                            <option th:value="${currentAcademicYear}" th:selected="${selectedAcademicYear == currentAcademicYear}" th:text="${currentAcademicYear}"></option>
+                            <option value="2022-2023" th:selected="${selectedAcademicYear == '2022-2023'}">2022-2023</option>
+                            <option value="2021-2022" th:selected="${selectedAcademicYear == '2021-2022'}">2021-2022</option>
 
-                        <!-- bạn có thể thêm nhiều năm học khác tùy theo cơ sở dữ liệu của bạn -->
-                    </select>
+                            <!-- bạn có thể thêm nhiều năm học khác tùy theo cơ sở dữ liệu của bạn -->
+                        </select>
 
-                    <label for="semester">Học kỳ:</label>
-                    <select id="semester" name="semester">
-                        <option value="1" th:selected="${selectedSemester == 1}">Kỳ 1</option>
-                        <option value="2" th:selected="${selectedSemester == 2}">Kỳ 2</option>
-                    </select>
-                    <input type="submit" value="Tìm kiếm">
-                </form>
+                        <label for="semester">Học kỳ:</label>
+                        <select id="semester" name="semester">
+                            <option value="1" th:selected="${selectedSemester == 1}">Kỳ 1</option>
+                            <option value="2" th:selected="${selectedSemester == 2}">Kỳ 2</option>
+                        </select>
+                        <input type="submit" value="Tìm kiếm">
+                    </form>
+                    <!-- Sử dụng th:if để hiển thị thẻ div nếu showColumn không phải là 'Phase2' hoặc 'Phase3' -->
+                    <div class="Add-new-section" th:if="${showColumn} == 'Phase1'">
+                        <button type="button" class="btn-add-new" onclick="showInputRow()">
+                            <i class="fas fa-plus"></i>
+                            Add New
+                        </button>
+                    </div>
+                </div>
+
                 <div class="table-container">
                     <form th:action="@{/students/add}" th:object="${newStudent}" method="post">
                         <table id="studentsTable">

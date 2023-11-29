@@ -1,67 +1,55 @@
 package com.example.springsehibernate.Service;
 
-import com.dropbox.core.DbxException;
-import com.dropbox.core.DbxRequestConfig;
-import com.dropbox.core.v2.DbxClientV2;
-import com.dropbox.core.v2.files.FileMetadata;
-import com.dropbox.core.v2.files.Metadata;
-import com.dropbox.core.v2.files.WriteMode;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import com.dropbox.core.v2.files.DeleteResult;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import com.example.springsehibernate.Config.DropboxConfig;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
 
 @Service
 public class DropboxService {
 
-    @Value("${dropbox.access.token}")
-    private String accessToken;
+    private final RestTemplate restTemplate;
+    private final DropboxConfig dropboxConfig;
+    public DropboxService(RestTemplate restTemplate, DropboxConfig dropboxConfig) {
+        this.restTemplate = restTemplate;
+        this.dropboxConfig = dropboxConfig;
+    }
 
-    private DbxClientV2 client;
+    public String refreshAccessToken() {
+        String tokenUrl = "https://api.dropboxapi.com/oauth2/token";
 
-    private void initClient() {
-        if (client == null) {
-            DbxRequestConfig config = DbxRequestConfig.newBuilder("dropbox/java-tutorial").build();
-            client = new DbxClientV2(config, accessToken);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("grant_type", "refresh_token");
+        map.add("refresh_token", dropboxConfig.getRefreshToken());
+        map.add("client_id", dropboxConfig.getAppKey());
+        map.add("client_secret", dropboxConfig.getAppSecret());
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(tokenUrl, request, String.class);
+            if (response.getStatusCode() == HttpStatus.OK) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode rootNode = objectMapper.readTree(response.getBody());
+                String newAccessToken = rootNode.path("access_token").asText();
+                dropboxConfig.setAccessToken(newAccessToken); // Cập nhật access-token
+                return newAccessToken;
+            } else {
+                // Xử lý phản hồi không thành công
+            }
+        } catch (Exception e) {
+            // Xử lý ngoại lệ
         }
-    }
-
-    public String uploadFile(MultipartFile file, String dropboxPath) throws DbxException, IOException {
-        initClient();
-        try (InputStream in = file.getInputStream()) {
-            FileMetadata metadata = client.files().uploadBuilder(dropboxPath)
-                    .withMode(WriteMode.ADD)
-                    .uploadAndFinish(in);
-            return metadata.getPathLower();
-        }
-    }
-
-    public OutputStream downloadFile(String dropboxPath) throws DbxException, IOException {
-        initClient();
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        client.files().downloadBuilder(dropboxPath).download(out);
-        return out;
-    }
-
-    public Metadata getFileInfo(String dropboxPath) throws DbxException {
-        initClient();
-        return client.files().getMetadata(dropboxPath);
-    }
-
-    public void deleteFile(String dropboxPath) throws DbxException {
-        initClient();
-        DeleteResult result = client.files().deleteV2(dropboxPath);
-    }
-
-    // Phương thức khác để lấy link chia sẻ của file trên Dropbox
-    public String createSharedLink(String dropboxPath) throws DbxException {
-        initClient();
-        return client.sharing().createSharedLinkWithSettings(dropboxPath).getUrl();
+        return null; // Trường hợp lỗi hoặc không lấy được token
     }
 }
 

@@ -105,7 +105,7 @@ public class StudentController {
                 if (isCurrentAcademicYear && isCurrentSemester) {
                     // Nếu là năm học và học kỳ hiện tại, kiểm tra TimePhase
                     LocalDate currentDate = LocalDate.now();
-//                    LocalDate currentDate = LocalDate.of(2023,10,10);
+//                    LocalDate currentDate = LocalDate.of(2023,9,10);
                     String showColumn = timePhaseService.getPhaseColumn(currentDate);
                     model.addAttribute("showColumn", showColumn);
                 } else {

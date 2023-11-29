@@ -17,5 +17,5 @@ public class DropboxConfig {
     @Value("${dropbox.access.token}")
     private String accessToken;
 
-    private String refreshToken;
+    private String refreshToken = "N1XDMsYpVy8AAAAAAAAAATPNq4ndlG7SkOdIsnNrzEqW4Ar0bu7lAS4yIToWA1Ut";
 }

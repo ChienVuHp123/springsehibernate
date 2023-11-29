@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
 * {
     padding: 0;
     margin: 0;
@@ -6,9 +5,13 @@
 }
 
 html {
-    font-family: 'Poppins', sans-serif;
     color: #083761;
 }
+
+html, body, p, h1, h2, h3, h4, h5, h6, div {
+    font-family: 'Poppins', sans-serif !important;
+}
+
 
 .clear {
     clear: both;
@@ -50,7 +53,6 @@ html {
 
 #nav > li > a {
     color: white;
-    text-transform: uppercase;
 }
 
 #nav li a {
@@ -133,7 +135,7 @@ html {
 #content .main-page {
     background-color: white;
     padding: 5px;
-    min-height: 80vh;
+    min-height: 70vh;
     border-radius: 10px;
     overflow: auto;
 }
@@ -234,13 +236,18 @@ table tbody td.sticky-col {
 
 
 }
-.main-page .header-section .name-header,
-.main-page .header-section .Add-new-section {
-    display: inline-block;
+
+.function-container {
+    display: flex; /* Sử dụng Flexbox */
+    align-items: center; /* Căn giữa các phần tử theo chiều dọc */
+    justify-content: flex-end; /* Đẩy .Add-new-section về phía bên phải cùng */
+    width: 100%; /* Đảm bảo container chiếm toàn bộ chiều rộng */
 }
 
-.main-page .header-section .Add-new-section {
-    float: right;
+/* Điều chỉnh kích thước của form và Add-new-section nếu cần */
+.function-container form, .Add-new-section {
+    flex: 1; /* Cho phép các phần tử mở rộng để chiếm không gian */
+    margin: 5px; /* Thêm một chút khoảng cách giữa các phần tử */
 }
 
 .Add-new-section .btn-add-new {
@@ -255,7 +262,7 @@ table tbody td.sticky-col {
     text-align: center;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
-
+    float: right;
 }
 .btn-add-new:focus {
     outline: none;
@@ -406,23 +413,6 @@ table tbody td.sticky-col {
     pointer-events: none;
     cursor: default;
     color: gray;
-}
-
-.phaseContent {
-    display: flex;
-    align-items: center;  /* Căn giữa theo chiều dọc */
-    padding: 10px;       /* Thêm một chút không gian xung quanh nội dung */
-}
-
-.vertical-line {
-    border-left: 2px solid black;
-    height: 100%;
-    margin-left: 10px;   /* Cách thẻ p một khoảng cách */
-}
-
-.phaseContent p {
-    margin: 0;           /* Loại bỏ khoảng cách mặc định của thẻ p */
-    padding-right: 10px; /* Thêm một chút không gian giữa thẻ p và đường thẳng */
 }
 
 .file-section {
@@ -601,8 +591,46 @@ table tbody td.sticky-col {
     cursor: pointer;
 }
 
+/*css cho form time phase*/
+/* Định dạng chung cho form */
+.form-time-phase {
+    max-width: 400px; /* Giới hạn chiều rộng của form */
+    margin: 0 auto; /* Căn giữa form */
+    padding: 20px; /* Khoảng cách xung quanh form */
+    border: 1px solid #ddd; /* Viền xung quanh form */
+    border-radius: 5px; /* Góc bo tròn cho form */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Đổ bóng cho form */
+    background-color: #f9f9f9; /* Màu nền của form */
+}
 
+/* Định dạng cho nhãn (label) */
+.form-time-phase label {
+    font-weight: bold; /* Chữ đậm cho nhãn */
+}
 
+/* Định dạng cho input */
+.form-time-phase input[type="date"] {
+    width: 100%; /* Chiều rộng 100% cho input */
+    padding: 8px; /* Khoảng cách bên trong input */
+    margin-bottom: 10px; /* Khoảng cách giữa các input */
+    border: 1px solid #ccc; /* Viền xung quanh input */
+    border-radius: 3px; /* Góc bo tròn cho input */
+}
+
+/* Định dạng cho nút Lưu */
+.form-time-phase button[type="submit"] {
+    background-color: #007bff; /* Màu nền xanh cho nút Lưu */
+    color: #fff; /* Màu chữ trắng cho nút Lưu */
+    padding: 10px 20px; /* Kích thước nút Lưu */
+    border: none; /* Loại bỏ viền của nút Lưu */
+    border-radius: 3px; /* Góc bo tròn cho nút Lưu */
+    cursor: pointer; /* Con trỏ tay khi di chuột qua nút Lưu */
+}
+
+/* Định dạng cho nút Lưu khi hover */
+.form-time-phase button[type="submit"]:hover {
+    background-color: #0056b3; /* Màu nền xanh đậm khi hover */
+}
 
 
 
