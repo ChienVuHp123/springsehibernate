@@ -16,8 +16,20 @@ function showInputRow() {
             document.querySelectorAll(".secondAdvisorColumn").forEach(function(column) {
                 column.style.display = '';
             });
+            // Hiển thị cột nơi công tác 1 và 2
+            document.querySelectorAll(".firstAdvisorWsColumn").forEach(function(column) {
+                column.style.display = '';
+            });
+            document.querySelectorAll(".secondAdvisorWsColumn").forEach(function(column) {
+                column.style.display = '';
+            });
+
             // Ẩn cột giảng viên chung
             document.querySelectorAll(".advisorColumn").forEach(function(column) {
+                column.style.display = 'none';
+            });
+            // Ẩn cột công tác chung
+            document.querySelectorAll(".advisorWsColumn").forEach(function(column) {
                 column.style.display = 'none';
             });
         } else {
@@ -29,8 +41,17 @@ function showInputRow() {
             document.querySelectorAll(".secondAdvisorColumn").forEach(function(column) {
                 column.style.display = 'none';
             });
+            document.querySelectorAll(".firstAdvisorWsColumn").forEach(function(column) {
+                column.style.display = 'none';
+            });
+            document.querySelectorAll(".secondAdvisorWsColumn").forEach(function(column) {
+                column.style.display = 'none';
+            });
             // Hiển thị cột giảng viên chung
             document.querySelectorAll(".advisorColumn").forEach(function(column) {
+                column.style.display = '';
+            });
+            document.querySelectorAll(".advisorWsColumn").forEach(function(column) {
                 column.style.display = '';
             });
         }
@@ -223,7 +244,7 @@ $(document).ready(function () {
         $.get(href, function (student) {
             console.log(student)
             $('#hiddenId').val(student.id);
-            $('#IdEdit').val(student.studentID);   // assuming your student object has 'id' in lowercase
+            $('#IdEdit').val(student.studentID);
             $('#NameEdit').val(student.name);
             $('#BirthEdit').val(student.dateOfBirth);
             $('#DTBCEdit').val(student.dtbc);
@@ -232,15 +253,50 @@ $(document).ready(function () {
             $('#lecturerEdit').val(student.namelecturer);
             $('#secondLecturerEdit').val(student.namesecondlecturer);
             $('#UniversityEdit').val(student.university);
+            $('#UniversitySeEdit').val(student.secondLecturerWorkSpace);
             $('#lecturerReviewEdit').val(student.lecturerReviewer);
             $('#lecturerReviewWorkSpaceEdit').val(student.lecturerReviewerWorkplace);
             $('#secondLecturerReviewEdit').val(student.secondLecturerReviewer);
             $('#secondLecturerReviewWorkSpaceEdit').val(student.secondLecturerReviewerWorkplace);
+            console.log(student.filePath)
+            document.getElementById('existingFilePath').textContent = student.filePath;
             $('#StatusEdit').val(student.status);
         })
         $('#editModal').modal('show');
     });
 });
+
+//
+document.addEventListener('DOMContentLoaded', function() {
+    var fileUpload = document.getElementById('fileUpload');
+    if (fileUpload) {
+        fileUpload.addEventListener('change', function(e) {
+            var file = e.target.files[0];
+            var maxSize = 10 * 1024 * 1024; // 10MB
+
+            if (file && file.size > maxSize) {
+                alert('Dung lượng file không được vượt quá 10MB.');
+                e.target.value = ''; // Reset lại trường file
+            }
+        });
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    var fileExcel = document.getElementById('file');
+    if (fileExcel) {
+        fileExcel.addEventListener('change', function(e) {
+            var file = e.target.files[0];
+            var maxSize = 10 * 1024 * 1024; // 10MB
+
+            if (file && file.size > maxSize) {
+                alert('Dung lượng file không được vượt quá 10MB.');
+                e.target.value = ''; // Reset lại trường file
+            }
+        });
+    }
+});
+
 
 document.addEventListener("DOMContentLoaded", function() {
     // Đảm bảo hàm submitForm khả dụng khi DOM được tải đầy đủ
@@ -300,22 +356,6 @@ function showfailureModal() {
     });
 }
 
-
-
-
-// function checkAndHideButton() {
-//     var showColumns = /*[# th:utext="${showColumns}"]*/false/*[/]*/; // Lấy giá trị từ Thymeleaf
-//
-//     if (showColumns) {
-//         document.getElementById('sendButton').style.display = 'block'; // Hiển thị nút
-//     } else {
-//         document.getElementById('sendButton').style.display = 'none'; // Ẩn nút
-//     }
-// }
-//
-// document.addEventListener("DOMContentLoaded", function() {
-//     checkAndHideButton();
-// });
 
 function confirmAndSubmit() {
     var isConfirmed = confirm("Danh sách sau khi xác nhận sẽ không thể thay đổi được nữa. Bạn có chắc chắn muốn tiếp tục không?");
@@ -419,6 +459,16 @@ $(document).ready(function() {
         }
     });
 });
+//js cho toast bootstrap
+document.addEventListener('DOMContentLoaded', function () {
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+    var toastList = toastElList.map(function (toastEl) {
+        return new bootstrap.Toast(toastEl)
+    })
+    toastList.forEach(toast => toast.show())
+});
+
+
 
 
 

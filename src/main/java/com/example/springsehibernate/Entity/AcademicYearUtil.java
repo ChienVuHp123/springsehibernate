@@ -11,10 +11,10 @@ public class AcademicYearUtil {
         Month month = LocalDate.now().getMonth();
         int startYear;
         int endYear;
-        if (today.getMonthValue() >= 9) { // Từ tháng 9 trở đi
+        if (today.getMonthValue() >= 6) {
             startYear = today.getYear();
             endYear = today.getYear() + 1;
-        } else { // Trước tháng 9
+        } else {
             startYear = today.getYear() - 1;
             endYear = today.getYear();
         }
@@ -23,12 +23,12 @@ public class AcademicYearUtil {
 
     public static int getCurrentSemester() {
         Month month = LocalDate.now().getMonth();
-        if (month.getValue() >= 9 && month.getValue() <= 12) {
+        if (month.getValue() >= 6 && month.getValue() <= 12) {
             return 1;
-        } else if (month.getValue() >= 1 && month.getValue() <= 5) {
+        } else if ((month.getValue() >= 1 && month.getValue() <= 5)) {
             return 2;
-        } else {
-            // Có thể trả về 0 hoặc một giá trị khác nếu bạn muốn xác định thời gian nghỉ giữa các học kỳ.
+        }
+        else {
             return 0;
         }
     }

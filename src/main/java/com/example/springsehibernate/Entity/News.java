@@ -1,5 +1,6 @@
 package com.example.springsehibernate.Entity;
 
+import com.example.springsehibernate.Validation.MaxFileSize;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -24,11 +25,12 @@ public class News {
     private Date publishDate;
 
     @Lob
+    @MaxFileSize
     private byte[] attachment;
 
     // Thêm trường cho tên file
     private String fileName;
 
-    // Thêm trường cho kiểu file nếu cần
+    // Thêm trường cho kiểu file
     private String fileType;
 }

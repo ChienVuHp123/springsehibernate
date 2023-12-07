@@ -25,60 +25,88 @@
     <div th:replace="fragments/navbar :: navbar"></div>
 
     <div id = "content">
-        <div id="currentNav"></div>
+        <div id="header-content">
+            <div id="currentNav"></div>
+        </div>
         <div class="main-page">
             <div class="header-section">
-                <div class="phaseContent">
-                    <p th:text="'Phase hiện tại: ' + ${showColumn}"></p>
-                    <div class="vertical-line"></div>
-                </div>
                 <div class="name-header">
-                    <p class="listTable">Danh sách Sinh Viên</p>
+                    <h5 class="listTable">Danh sách Sinh Viên</h5>
+                    <div class="divider"></div>
+                    <div class="phaseContent">
+                        <p th:if="${showColumn} == 'Phase1'" th:text="'Đăng ký đồ án tốt nghiệp'"></p>
+                        <p th:if="${showColumn} == 'Phase2'" th:text="'Chỉnh sửa tên đề tài'"></p>
+                        <p th:if="${showColumn} == 'Phase3'" th:text="'Phân công phản biện'"></p>
+                    </div>
                 </div>
             </div>
             <div class="content-section">
-
                 <!-- Hiển thị thông báo lỗi gửi messages nếu có -->
                 <div th:if="${errorSendMessages}" class="alert alert-danger" role="alert">
                     <p th:text="${errorSendMessages}"></p>
                 </div>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>MSV</th>
-                        <th>Họ và tên</th>
-                        <th>Ngày sinh</th>
-                        <th>ĐTBC/TC học lại</th>
-                        <th>Đề Tài</th>
-                        <th th:if="${showColumn == 'Phase2' || showColumn == 'Phase3'}" >Đề tài mới</th>
-                        <th>Cán bộ hướng dẫn</th>
-                        <th>Nơi công tác</th>
-                        <th th:if="${showColumn == 'Phase3'}">Giảng viên phản biện 1</th>
-                        <th th:if="${showColumn == 'Phase3'}">Nơi công tác</th>
-                        <th th:if="${showColumn == 'Phase3'}">Giảng viên phản biện 2</th>
-                        <th th:if="${showColumn == 'Phase3'}">Nơi công tác</th>
-                        <th th:if="${showColumn == 'Phase3'}">Trang thái</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!-- Lặp qua danh sách sinh viên đã xác nhận -->
-                    <tr th:each="student : ${confirmedStudents}">
-                        <td th:text="${student.getStudentID()}"></td>
-                        <td  style="white-space: nowrap" th:text="${student.getName()}"></td>
-                        <td  style="white-space: nowrap" th:text="${student.getDateOfBirth()}"></td>
-                        <td  th:text="${student.dtbc}"></td>
-                        <td  th:text="${student.getThesistopics()}"></td>
-                        <td th:if="${showColumn == 'Phase2' || showColumn == 'Phase3'}" th:text="${student.newTopics}"></td>
-                        <td  th:text="${student.getNamelecturer()}"></td>
-                        <td th:text="${student.getUniversity()}"></td>
-                        <td th:if="${showColumn == 'Phase3'}" th:text="${student.lecturerReviewer}"></td>
-                        <td th:if="${showColumn == 'Phase3'}" th:text="${student.lecturerReviewerWorkplace}"></td>
-                        <td th:if="${showColumn == 'Phase3'}" th:text="${student.secondLecturerReviewer}"></td>
-                        <td th:if="${showColumn == 'Phase3'}" th:text="${student.secondLecturerReviewerWorkplace}"></td>
-                        <td th:if="${showColumn == 'Phase3'}" th:text="${student.status}"></td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="table-container">
+                    <table id="studentsTable">
+                        <thead>
+                        <tr>
+                            <th class="sticky-col first custom-size-sm">MSV</th>
+                            <th class="sticky-col second custom-size">Họ và tên</th>
+                            <th class="custom-size-sm">Ngày sinh</th>
+                            <th class="custom-size-sm">ĐTBC/TC học lại</th>
+                            <th class="custom-size-lg">Đề Tài</th>
+                            <th class="custom-size-lg" th:if="${showColumn == 'Phase2' || showColumn == 'Phase3' || showColumn == 'all'}" >Đề tài mới</th>
+                            <th class="advisorColumn custom-size">Cán bộ hướng dẫn</th>
+                            <!--                        <th class="firstAdvisorColumn custom-size" style="display: none;">Cán bộ hướng dẫn 1</th>-->
+                            <!--                        <th class="secondAdvisorColumn custom-size" style="display: none;">Cán bộ hướng dẫn 2</th>-->
+                            <th class="custom-size">Nơi công tác</th>
+                            <th class="custom-size" th:if="${showColumn == 'Phase3' || showColumn == 'all'}">Giảng viên phản biện 1</th>
+                            <th class="custom-size" th:if="${showColumn == 'Phase3' || showColumn == 'all'}">Nơi công tác</th>
+                            <th class="custom-size" th:if="${showColumn == 'Phase3' || showColumn == 'all'}">Giảng viên phản biện 2</th>
+                            <th class="custom-size" th:if="${showColumn == 'Phase3' || showColumn == 'all'}">Nơi công tác</th>
+                            <th class="custom-size" th:if="${showColumn == 'Phase3' || showColumn == 'all'}">Đính
+                                kèm file
+                            </th>
+                            <th class="custom-size-sm" th:if="${showColumn == 'Phase3' || showColumn == 'all'}">Trang thái</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Lặp qua danh sách sinh viên đã xác nhận -->
+                        <tr th:each="student : ${confirmedStudents}">
+                            <td class="sticky-col first custom-size-sm" th:text="${student.getStudentID()}"></td>
+                            <td class="sticky-col second custom-size" style="white-space: nowrap" th:text="${student.getName()}"></td>
+                            <td  class="custom-size-sm" style="white-space: nowrap" th:text="${student.getDateOfBirth()}"></td>
+                            <td  class="custom-size-sm" th:text="${student.dtbc}"></td>
+                            <td  class="custom-size-lg" th:text="${student.getThesistopics()}"></td>
+                            <td class="custom-size-lg" th:if="${showColumn == 'Phase2' || showColumn == 'Phase3' || showColumn == 'all'}" th:text="${student.newTopics}"></td>
+
+                            <!-- Cột Cán bộ hướng dẫn (chung) -->
+                            <td th:utext="${student.getNamelecturer()} +' ,&lt;br&gt;' + ${student.getNamesecondlecturer()}" class="advisorColumn custom-size"></td>
+                            <!--                        &lt;!&ndash; Cột Cán bộ hướng dẫn 1 - Ban đầu ẩn &ndash;&gt;-->
+                            <!--                        <td th:text="${student.getNamelecturer()}" class="firstAdvisorColumn custom-size" style="display: none;"></td>-->
+
+                            <!--                        &lt;!&ndash; Cột Cán bộ hướng dẫn 2 - Ban đầu ẩn &ndash;&gt;-->
+                            <!--                        <td th:text="${student.getNamesecondlecturer()}" class="secondAdvisorColumn custom-size" style="display: none;"></td>-->
+
+                            <td class="custom-size" th:text="${student.getUniversity()}"></td>
+                            <td class="custom-size" th:if="${showColumn == 'Phase3' || showColumn == 'all'}" th:text="${student.lecturerReviewer}"></td>
+                            <td class="custom-size" th:if="${showColumn == 'Phase3'|| showColumn == 'all'}" th:text="${student.lecturerReviewerWorkplace}"></td>
+                            <td class="custom-size" th:if="${showColumn == 'Phase3'|| showColumn == 'all'}" th:text="${student.secondLecturerReviewer}"></td>
+                            <td class="custom-size" th:if="${showColumn == 'Phase3'|| showColumn == 'all'}" th:text="${student.secondLecturerReviewerWorkplace}"></td>
+                            <td class="custom-size" th:if="${showColumn == 'Phase3' || showColumn == 'all'}">
+                                <span th:if="${student.filePath != null}">
+                                    <a th:if="${#lists.contains(roles, 'ROLE_BoMon')}" th:href="@{/bo-mon/send-confirm-list/download/{id}(id=${student.id})}"
+                                       th:text="${#strings.substring(student.filePath, student.filePath.lastIndexOf('/') + 1)}"></a>
+                                    <a th:if="${#lists.contains(roles, 'ROLE_Khoa')}" th:href="@{/khoa/download/{id}(id=${student.id})}"
+                                       th:text="${#strings.substring(student.filePath, student.filePath.lastIndexOf('/') + 1)}"></a>
+                                </span>
+                                <span th:if="${student.filePath == null}">N/A</span>
+                            </td>
+
+                            <td class="custom-size-sm" th:if="${showColumn == 'Phase3'|| showColumn == 'all'}" th:text="${student.status}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
 
                 <!-- Modal thông báo -->
                 <div class="modal fade" id="successModal">
@@ -106,7 +134,7 @@
                 <!-- Nút mở modal -->
                 <div class="CsvAndSend">
                     <button class="button-csv" onclick="exportTableToCSV('DanhSachDoAn.csv')">Xuất CSV</button>
-                    <button class="button-send" data-toggle="modal" data-target="#messageModal">Send</button>
+                    <button th:if="${!#lists.contains(roles, 'ROLE_Khoa')}" class="button-send" data-toggle="modal" data-target="#messageModal">Send</button>
                 </div>
 
                 <!-- Modal -->

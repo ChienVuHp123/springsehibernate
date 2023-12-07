@@ -74,15 +74,13 @@
             </div>
 
             <div th:if="${graduatesPage.hasContent}">
-                <div style="display: flex; justify-content: space-between; align-items: center">
-                    <div class="button-submit-confirm">
-                        <form th:action="@{/khoa/confirm}" method="post" onsubmit="return confirmAndSubmit()">
-                            <button type="submit" class="btn btn-primary">Xác nhận</button>
-                        </form>
-                        <form th:action="@{/khoa/delete-upload}" method="post">
-                            <button type="submit" class="btn btn-danger">Xóa</button>
-                        </form>
-                    </div>
+                <div class="button-submit-confirm">
+                    <form th:action="@{/khoa/confirm}" method="post" onsubmit="return confirmAndSubmit()">
+                        <button type="submit" class="btn btn-primary">Xác nhận</button>
+                    </form>
+                    <form th:action="@{/khoa/delete-upload}" method="post">
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                    </form>
                 </div>
                 <table>
                     <thead>

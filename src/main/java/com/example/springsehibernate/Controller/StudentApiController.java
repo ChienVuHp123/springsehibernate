@@ -1,9 +1,11 @@
 package com.example.springsehibernate.Controller;
 
+import com.dropbox.core.DbxDownloader;
 import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
+import com.dropbox.core.v2.sharing.SharedLinkMetadata;
 import com.dropbox.core.v2.users.FullAccount;
 import com.example.springsehibernate.Config.DropboxConfig;
 import com.example.springsehibernate.Entity.AcademicYearUtil;
@@ -19,7 +21,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -97,6 +103,7 @@ public class StudentApiController {
             Student existingStudent = optionalStudent.get();
 
             Long studentId = Long.parseLong(formData.get("IdEdit"));
+
             existingStudent.setStudentID(studentId);
 
             String nameStudent = formData.get("NameEdit");
@@ -124,10 +131,23 @@ public class StudentApiController {
             String newTopicString = formData.get("NewTopicEdit");
             existingStudent.setNewTopics(newTopicString);
 
-            Float dtbc = Float.parseFloat(formData.get("DTBCEdit"));
-            existingStudent.setDtbc(dtbc);
+            String dtbcString = formData.get("DTBCEdit");
+            Float dtbc = null;
+            if (dtbcString != null && !dtbcString.isEmpty()) {
+                try {
+                    dtbc = Float.parseFloat(dtbcString);
+                } catch (NumberFormatException e) {
+                    // Xử lý lỗi, có thể ghi log hoặc trả về thông báo lỗi phù hợp
+                    e.printStackTrace();
+                }
+            }
+            if (dtbc != null) {
+                existingStudent.setDtbc(dtbc);
+            }
+
 
             String nameLecturerString = formData.get("lecturerEdit");
+            System.out.println(nameLecturerString);
             existingStudent.setNamelecturer(nameLecturerString);
 
             String nameSecondLecturerString = formData.get("secondLecturerEdit");
@@ -146,6 +166,9 @@ public class StudentApiController {
 
             String uniString = formData.get("UniversityEdit");
             existingStudent.setUniversity(uniString);
+
+            String SecondUniString = formData.get("UniversitySeEdit");
+            existingStudent.setSecondLecturerWorkSpace(SecondUniString);
 
             String lecturerRwSt = formData.get("lecturerReviewEdit");
             existingStudent.setLecturerReviewer(lecturerRwSt);
@@ -200,14 +223,13 @@ public class StudentApiController {
     }
 
     private String uploadFileToDropbox(MultipartFile file) throws Exception {
-//        // Làm mới accessToken nếu cần
-        String accessToken = getUpdatedAccessToken(dropboxConfig.getRefreshToken());
+
+        String accessToken = dropboxService.getUpdatedAccessToken(dropboxConfig.getRefreshToken());
         System.out.println(dropboxConfig.getRefreshToken());
         dropboxConfig.setAccessToken(accessToken);
         DbxRequestConfig config = DbxRequestConfig.newBuilder("uet-project-storage").build();
 
         DbxClientV2 client = new DbxClientV2(config, dropboxConfig.getAccessToken());
-
         try {
             FullAccount account = client.users().getCurrentAccount();
             System.out.println("Token is valid. User's account: " + account.getName().getDisplayName());
@@ -216,7 +238,6 @@ public class StudentApiController {
             System.out.println("Token is invalid or has expired.");
             e.printStackTrace();
         }
-
         try (InputStream in = file.getInputStream()) {
             String dropboxPath = "/home/uetStorage/" + file.getOriginalFilename(); // Specify the Dropbox path
             System.out.println(dropboxPath);
@@ -231,43 +252,46 @@ public class StudentApiController {
             return "Error";
         }
     }
-
-    private String getUpdatedAccessToken(String refreshToken) throws Exception {
-        String clientId = dropboxConfig.getAppKey(); // Thay thế với Client ID của ứng dụng Dropbox
-        String clientSecret = dropboxConfig.getAppSecret(); // Thay thế với Client Secret của ứng dụng Dropbox
-
-        // Tạo URL để yêu cầu làm mới token
-        URL url = new URL("https://api.dropbox.com/oauth2/token");
-        String params = "grant_type=refresh_token&refresh_token=" + refreshToken +
-                "&client_id=" + clientId + "&client_secret=" + clientSecret;
-        System.out.println(params);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setDoOutput(true);
-        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        conn.getOutputStream().write(params.getBytes(StandardCharsets.UTF_8));
-
+    @GetMapping("/download/{studentId}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable Long studentId) {
         try {
-            int responseCode = conn.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                // Đọc phản hồi từ Dropbox
-                String response = new String(conn.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-                JSONObject jsonResponse = new JSONObject(response);
+            Student student = studentRepository.findById(studentId)
+                    .orElseThrow(() -> new RuntimeException("Student not found"));
+            Resource fileResource = dropboxService.downloadFileFromURL(student.getFilePath());
+            MediaType mediaType = dropboxService.determineMediaType(student.getFilePath());
 
-                // Kiểm tra và lấy access_token mới
-                if (jsonResponse.has("access_token")) {
-                    return jsonResponse.getString("access_token");
-                }
-            } else {
-                // Xử lý trường hợp phản hồi không thành công
-                String errorResponse = new String(conn.getErrorStream().readAllBytes(), StandardCharsets.UTF_8);
-                System.out.println("Error response: " + errorResponse);
-                throw new Exception("Failed to refresh access token with response code: " + responseCode);
-            }
-        } finally {
-            conn.disconnect();
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + student.getFilePath() + "\"")
+                    .body(fileResource);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        throw new Exception("Failed to refresh access token");
     }
+//
+//    public Resource directDownloadFromDropbox(String dropboxPath, DbxClientV2 client) throws DbxException {
+//        try {
+//            // Tải xuống file từ Dropbox
+//            DbxDownloader<FileMetadata> downloader;
+//            InputStream inputStream;
+//            try {
+//                downloader = client.files().download(dropboxPath);
+//                inputStream = downloader.getInputStream();
+//            } catch (DbxException e) {
+//                // Xử lý lỗi khi tải file từ Dropbox
+//                e.printStackTrace();
+//                throw e;
+//            }
+//
+//            // Tạo Resource từ InputStream
+//            return new InputStreamResource(inputStream);
+//        } catch (Exception e) {
+//            // Xử lý các lỗi khác
+//            e.printStackTrace();
+//            throw new RuntimeException("Error downloading file from Dropbox", e);
+//        }
+//    }
+
 }
 

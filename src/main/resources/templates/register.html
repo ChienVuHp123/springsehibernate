@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tạo tài khoản bộ môn mới</title>
+    <title>Tạo tài khoản giảng viên mới</title>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -42,7 +42,7 @@
         <div class="main-page">
             <div class="header-section">
                 <div class="name-header">
-                    <h5 style="color: #083761">Đăng ký bộ môn mới</h5>
+                    <h4 style="color: #083761">Đăng ký giảng viên mới</h4>
                 </div>
             </div>
             <div class="content-section">
@@ -62,17 +62,17 @@
                         </div>
 
                         <div class="form-group">
-                            <input type="text" id="realname" name="realname" placeholder="Tên bộ môn">
+                            <input type="text" id="realname" name="realname" placeholder="Họ và tên giảng viên">
                         </div>
 
                         <div class="form-group">
-                            <input type="number" id="OwnerID" name="OwnerID" placeholder="Mã bộ môn" required>
+                            <input type="number" id="OwnerID" name="OwnerID" placeholder="Mã giảng viên" required>
                             <span class="error-message" id="ownerId-error"></span>
                         </div>
 
                         <div class="form-group">
-                            <select id="role" name="role">
-                                <option value="GiangVien">Bộ môn</option>
+                            <select id="role" name="role"disabled>
+                                <option value="GiangVien">Giảng viên</option>
                             </select>
                         </div>
 
@@ -137,7 +137,6 @@
                 realname: document.getElementById("realname").value,
                 role: document.getElementById("role").value,
                 ownerID: document.getElementById("OwnerID").value,
-                // Đừng quên thêm CSRF token vào dữ liệu gửi đi
                 _csrf: document.getElementById("csrf").value
             };
 

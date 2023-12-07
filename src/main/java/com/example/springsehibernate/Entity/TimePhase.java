@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "time_phases")
@@ -30,4 +31,28 @@ public class TimePhase {
 
     @Column(name = "phase3_end")
     private LocalDate phase3End;
+
+    public String getFormattedPhase1Start() {
+        return phase1Start.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+    }
+
+    public String getFormattedPhase1End() {
+        return phase1End.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+    }
+
+    public String getFormattedPhase2Start() {
+        return phase2Start.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+    }
+
+    public String getFormattedPhase2SEnd() {
+        return phase2End.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+    }
+
+    public String getFormattedPhase3Start() {
+        return phase3Start.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+    }
+
+    public String getFormattedPhase3End() {
+        return phase3End.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+    }
 }

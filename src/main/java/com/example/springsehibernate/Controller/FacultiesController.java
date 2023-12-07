@@ -4,13 +4,11 @@ import com.example.springsehibernate.Entity.*;
 import com.example.springsehibernate.Repository.*;
 import com.example.springsehibernate.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -21,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/khoa")
-public class KhoaController {
+public class FacultiesController {
 
     @Autowired
     private StudentRepository studentRepository;
@@ -50,28 +48,27 @@ public class KhoaController {
     private TimePhaseService timePhaseService;
 
     @Autowired
+    private DepartmentRepository departmentRepository;
+
+    @Autowired
     private QualifiedGraduateService qualifiedGraduateService;
 
     @GetMapping("/list/{departmentID}")
     public String getList(@PathVariable("departmentID") Long departmentID, Model model) {
 
+        String currentAcademicYear = AcademicYearUtil.getCurrentAcademicYear();
+        int currentSemester = AcademicYearUtil.getCurrentSemester();
         // Lấy danh sách studentVersion dựa trên departmentID
-        List<StudentVersion> confirmList = studentVersionService.getStudentVersionByStudent_Lecturer_Department_DepartmentIdAndVersionType(departmentID, "Bộ môn");
-
-        // Dựa trên danh sách confirmations, lấy danh sách sinh viên liên quan
-        List<Student> students = confirmList.stream()
-                .map(StudentVersion::getStudent)
-                .collect(Collectors.toList());
-
-        model.addAttribute("students", students);
-//        LocalDate currentDate = LocalDate.now();
-        LocalDate currentDate = LocalDate.of(2023, 9, 10); // Thiết lập ngày là 28/10/2023
+        List<StudentVersion> confirmList = studentVersionService.getStudentVersionByStudent_Lecturer_Department_DepartmentIdAndVersionType(departmentID, "Bộ môn",
+                currentAcademicYear, currentSemester);
+        model.addAttribute("confirmList", confirmList);
+        LocalDate currentDate = LocalDate.now();
+//        LocalDate currentDate = LocalDate.of(2023, 9, 10); // Thiết lập ngày là 28/10/2023
 
         String showColumn = timePhaseService.getPhaseColumn(currentDate);
 
-        // Thêm biến showColumn vào model để truyền tới view
         model.addAttribute("showColumn", showColumn);
-        return "listView"; // "listView" là tên file view (Thymeleaf template) bạn muốn render
+        return "listViewFaculty";
     }
 
     @PostMapping("/list/confirm/{messageId}")
@@ -178,8 +175,8 @@ public class KhoaController {
 //        List<StudentVersion> confirmedStudents = studentVersionService.getStudentVersionByVersionTypeAndStudent_Lecturer_Department_FacultyId("Khoa", currentUser.getUserID());
        List<StudentVersion> confirmedStudents = studentVersionRepository.findByVersionTypeAndAcademicYearAndSemester("Khoa", AcademicYearUtil.getCurrentAcademicYear(), AcademicYearUtil.getCurrentSemester());
         model.addAttribute("confirmedStudents", confirmedStudents);
-//        LocalDate currentDate = LocalDate.now();
-        LocalDate currentDate = LocalDate.of(2023, 9, 10); // Thiết lập ngày là 28/10/2023
+        LocalDate currentDate = LocalDate.now();
+//        LocalDate currentDate = LocalDate.of(2023, 9, 10); // Thiết lập ngày là 28/10/2023
 
         String showColumn = timePhaseService.getPhaseColumn(currentDate);
 
@@ -191,15 +188,44 @@ public class KhoaController {
 
     @GetMapping("/TimePhase")
     public String getTimePhase(Model model) {
+        boolean exists = timePhaseRepository.existsByIdIsNotNull();
+        model.addAttribute("exists", exists);
+        if (exists) {
+            List<TimePhase> timePhases = timePhaseRepository.findAll();
+            model.addAttribute("timePhases", timePhases);
+        }
         model.addAttribute("timePhase", new TimePhase());
         return "time-phase";
     }
     @PostMapping("/setTimePhase")
     public String saveTimePhase(@ModelAttribute TimePhase timePhase, RedirectAttributes redirectAttributes) {
-        timePhaseRepository.save(timePhase);
-        redirectAttributes.addFlashAttribute("successMessage", "Thời gian giai đoạn đã được cập nhật!");
+        try {
+
+            timePhaseRepository.save(timePhase);
+            redirectAttributes.addFlashAttribute("toastMessage", "Thời gian giai đoạn đã được cập nhật!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("toastMessage", "Có lỗi xảy ra: " + e.getMessage());
+        }
         return "redirect:/khoa/TimePhase";
     }
 
+    @PostMapping("/deleteTimePhases")
+    public String deleteAllTimePhases(RedirectAttributes redirectAttributes) {
+        timePhaseRepository.deleteAll();
+        redirectAttributes.addFlashAttribute("toastMessage", "Thời gian giai đoạn đã được xóa");
+        return "redirect:/khoa/TimePhase";
+    }
+
+    @GetMapping("/register")
+    public String showRegistrationForm() {
+        return "register-department";
+    }
+
+    @GetMapping("/{facultyId}")
+    public String getDepartmentByFaculty(@PathVariable Long facultyId, Model model) {
+        List<Department> departmentList = departmentRepository.findByFacultyId(facultyId);
+        model.addAttribute("departmentList", departmentList);
+        return "departments-list";
+    }
 
 }

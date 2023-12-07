@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh sách giảng viên quản lý</title>
+    <title>Danh sách bộ môn quản lý</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -28,33 +28,33 @@
         <div class="main-page">
             <div class="header-section">
                 <div class="name-header">
-                    <h4>Danh sách giảng viên</h4>
+                    <h4>Danh sách bộ môn</h4>
                 </div>
             </div>
             <div class="content-section">
 
-            <div>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Mã giảng viên</th>
-                        <th>Họ và tên</th>
-                        <th>Thuộc</th>
-                        <th>Gmail</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="lecturer : ${lecturers}">
-                        <td th:text="${lecturer.getId()}"></td>
-                        <td th:text="${lecturer.name}"></td>
-                        <td th:text="${lecturer.getDepartment().getName()}"></td>
-                        <td>uet@gmail.com</td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Mã bộ môn</th>
+                            <th>Tên bộ môn</th>
+                            <th>Thuộc</th>
+                            <th>Gmail</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="department : ${departmentList}">
+                            <td th:text="${department.getDepartmentId()}"></td>
+                            <td th:text="${department.name}"></td>
+                            <td>Khoa Điện tử viễn thông</td>
+                            <td>uet@gmail.com</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
     </div>
 </div>
 </body>

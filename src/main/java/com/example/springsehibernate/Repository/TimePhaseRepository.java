@@ -13,4 +13,7 @@ import java.util.Optional;
 public interface TimePhaseRepository extends JpaRepository<TimePhase, Long> {
     @Query("SELECT tp FROM TimePhase tp WHERE :currentDate BETWEEN tp.phase1Start AND tp.phase3End")
     Optional<TimePhase> findCurrentTimePhase(@Param("currentDate") LocalDate currentDate);
+
+    // Kiểm tra xem bảng có chứa bất kỳ bản ghi nào không
+    boolean existsByIdIsNotNull();
 }

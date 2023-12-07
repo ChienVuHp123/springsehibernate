@@ -32,6 +32,7 @@ public class Student {
     private String NewTopics;
 
     @Column(name = "dtbc")
+
     private Float dtbc;
 
     @Column(name = "university")
@@ -72,6 +73,8 @@ public class Student {
 
     @Column(name = "namesecondlecturer")
     private String namesecondlecturer;
+
+    private String secondLecturerWorkSpace;
 
     @JsonIgnore
     @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

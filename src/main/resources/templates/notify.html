@@ -38,9 +38,8 @@
 <!--                    </th:block>-->
 
                     <li class="listMessage" th:each="notification : ${notifications}">
-                        <div  class="GiangVienDoAn">
+                        <div  class="NotificationList">
                             <p Class="Title-Topic" th:text="${notification.content}"></p>
-                            <p Class="Name-lecture"></p>
                             <p class="Time-send" th:text="${#dates.format(T(java.util.Date).from(notification.createdAt.atZone(T(java.time.ZoneId).systemDefault()).toInstant()), 'dd/MM/yyyy HH:mm')}"></p>
                         </div>
 

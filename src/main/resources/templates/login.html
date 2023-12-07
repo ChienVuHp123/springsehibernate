@@ -418,31 +418,31 @@
     <div class="forms-container">
         <div class="signin-signup">
             <form th:action="@{/login}" method="post" class="sign-in-form">
-                <h2 class="title">Sign in</h2>
+                <h2 class="title">Đăng nhập</h2>
                 <div class="input-field">
                     <i class="fas fa-user"></i>
-                    <input type="text" name="username" placeholder="Username" />
+                    <input type="text" name="username" placeholder="Tên đăng nhập" required />
                 </div>
                 <div class="input-field">
                     <i class="fas fa-lock"></i>
-                    <input type="password" name="password" placeholder="Password" />
+                    <input type="password" name="password" placeholder="Mật khẩu" required />
                 </div>
-                <input type="submit" value="Log in" class="btn solid" />
-                <p class="social-text">Or Sign in with social platforms</p>
-                <div class="social-media">
-                    <a href="#" class="social-icon">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#" class="social-icon">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" class="social-icon">
-                        <i class="fab fa-google"></i>
-                    </a>
-                    <a href="#" class="social-icon">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                </div>
+                <input type="submit" value="Đăng nhập" class="btn solid" />
+<!--                <p class="social-text">Or Sign in with social platforms</p>-->
+<!--                <div class="social-media">-->
+<!--                    <a href="#" class="social-icon">-->
+<!--                        <i class="fab fa-facebook-f"></i>-->
+<!--                    </a>-->
+<!--                    <a href="#" class="social-icon">-->
+<!--                        <i class="fab fa-twitter"></i>-->
+<!--                    </a>-->
+<!--                    <a href="#" class="social-icon">-->
+<!--                        <i class="fab fa-google"></i>-->
+<!--                    </a>-->
+<!--                    <a href="#" class="social-icon">-->
+<!--                        <i class="fab fa-linkedin-in"></i>-->
+<!--                    </a>-->
+<!--                </div>-->
             </form>
 
             <form action="#" class="sign-up-form">
@@ -482,13 +482,16 @@
     <div class="panels-container">
         <div class="panel left-panel">
             <div class="content">
-                <h3>New here ?</h3>
+                <h3>Hệ thống quản lý đồ án tốt nghiệp</h3>
                 <p>
-                    Hệ thống quản lý đồ án tốt nghiệp cho sinh viên khoa điện tử viễn thông
+                    Hệ thống quản lý đồ án/khóa luận tốt nghiệp cho sinh viên khoa điện tử viễn thông
                 </p>
-                <button class="btn transparent" id="sign-up-btn">
-                    Sign up
-                </button>
+                <p>
+                    Thầy cô muốn đăng ký tài khoản vui lòng liên hệ với thư ký bộ môn để đăng ký
+                </p>
+<!--                <button class="btn transparent" id="sign-up-btn">-->
+<!--                    Sign up-->
+<!--                </button>-->
             </div>
 <!--            <img src="/assets/img/log.svg" class="image" alt="" />-->
         </div>

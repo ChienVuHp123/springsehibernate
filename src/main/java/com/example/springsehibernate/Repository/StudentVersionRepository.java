@@ -24,7 +24,8 @@ public interface StudentVersionRepository extends JpaRepository<StudentVersion, 
     List<StudentVersion> findByVersionTypeAndStudent_Lecturer_Department_DepartmentId(String versionType, Long departmentId);
 
 
-    List<StudentVersion> findByStudent_Lecturer_Department_DepartmentIdAndVersionType(Long departmentID, String versionType);
+    @Query("SELECT sv FROM StudentVersion sv WHERE sv.student.lecturer.department.departmentId = :departmentID AND sv.versionType = :versionType AND sv.academicYear = :academicYear AND sv.Semester = :semester")
+    List<StudentVersion> findByStudent_Lecturer_Department_DepartmentIdAndVersionTypeAndAcademicYearAndSemester(Long departmentID, String versionType, String academicYear, int semester);
 
     @Query("SELECT sv FROM StudentVersion sv WHERE sv.academicYear = :academicYear AND sv.Semester = :semester AND sv.versionType = :versionType AND sv.lecturer.department.departmentId = :departmentId")
     List<StudentVersion> findByAcademicYearAndSemesterAndVersionTypeAndLecturer_Department_DepartmentId(String academicYear,

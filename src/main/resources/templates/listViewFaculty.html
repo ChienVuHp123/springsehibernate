@@ -65,8 +65,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="student : ${students}">
-                            <td class="sticky-col first custom-size-sm" th:text="${student.getStudentID()}"></td>
+                        <tr th:each="student : ${confirmList}">
+                            <td class="sticky-col first custom-size-sm" th:text="${student.studentID}"></td>
                             <td class="sticky-col second custom-size" style="white-space: nowrap" th:text="${student.getName()}"></td>
                             <td  class="custom-size-sm" style="white-space: nowrap" th:text="${student.getDateOfBirth()}"></td>
                             <td  class="custom-size-sm" th:text="${student.dtbc}"></td>
@@ -75,12 +75,6 @@
 
                             <!-- Cột Cán bộ hướng dẫn (chung) -->
                             <td th:utext="${student.getNamelecturer()} +' ,&lt;br&gt;' + ${student.getNamesecondlecturer()}" class="advisorColumn custom-size"></td>
-                            <!--                        &lt;!&ndash; Cột Cán bộ hướng dẫn 1 - Ban đầu ẩn &ndash;&gt;-->
-                            <!--                        <td th:text="${student.getNamelecturer()}" class="firstAdvisorColumn custom-size" style="display: none;"></td>-->
-
-                            <!--                        &lt;!&ndash; Cột Cán bộ hướng dẫn 2 - Ban đầu ẩn &ndash;&gt;-->
-                            <!--                        <td th:text="${student.getNamesecondlecturer()}" class="secondAdvisorColumn custom-size" style="display: none;"></td>-->
-
                             <td class="custom-size" th:text="${student.getUniversity()}"></td>
                             <td class="custom-size" th:if="${showColumn == 'Phase3' || showColumn == 'all'}" th:text="${student.lecturerReviewer}"></td>
                             <td class="custom-size" th:if="${showColumn == 'Phase3'|| showColumn == 'all'}" th:text="${student.lecturerReviewerWorkplace}"></td>
@@ -88,7 +82,7 @@
                             <td class="custom-size" th:if="${showColumn == 'Phase3'|| showColumn == 'all'}" th:text="${student.secondLecturerReviewerWorkplace}"></td>
                             <td class="custom-size" th:if="${showColumn == 'Phase3'|| showColumn == 'all'}">
                                     <span th:if="${student.filePath != null}">
-                                         <a th:href="@{/download/{id}(id=${student.ID})}"
+                                         <a th:href="@{/khoa/download/{id}(id=${student.id})}"
                                             th:text="${#strings.substring(student.filePath, student.filePath.lastIndexOf('/') + 1)}">
                                          </a>
                                     </span>

@@ -9,6 +9,7 @@ html {
 }
 
 html, body, p, h1, h2, h3, h4, h5, h6, div {
+    /*font-family: 'Montserrat', sans-serif !important;*/
     font-family: 'Poppins', sans-serif !important;
 }
 
@@ -25,26 +26,40 @@ html, body, p, h1, h2, h3, h4, h5, h6, div {
 
 #main  {
     background-color: #F3F3F3;
-    height: 100vh;
+    height: 90vh;
 }
 
 #header {
-    height: 46px;
+    height: 56px;
     background-color: #083761;
     font-size: medium;
-    border-radius: 6px 10px;
+    border-radius: 3px;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1;
+    z-index: 2;
+    display: flex;
+    align-items: center;
 
 }
 
 #nav {
-    display: inline-block;
+    padding-top: 15px;
+    display: flex;
+    align-items: center;
+    float: left;
+}
+#nav > .logo {
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
 }
 
+.logo img {
+    width: 30px;
+    height: 30px;
+}
 #nav > li {
     display: inline-block;
     position: relative;
@@ -57,7 +72,7 @@ html, body, p, h1, h2, h3, h4, h5, h6, div {
 
 #nav li a {
     text-decoration: none;
-    line-height: 46px;
+    line-height: 40px;
     padding: 0 24px;
     display: block;
 
@@ -65,67 +80,156 @@ html, body, p, h1, h2, h3, h4, h5, h6, div {
 
 #nav > li:hover {
     background-color: rgba(29,142,208,.08);;
-    border-radius: 10px;
+    border-radius: 4px;
+
 
 }
 
 #nav li .dropdown-content {
-    display: none; /* Ẩn menu con mặc định */
-    position: absolute; /* Định vị menu con liên quan đến item cha của nó */
-    background-color: #f9f9f9; /* Màu nền cho menu con */
-    min-width: 160px; /* Chiều rộng tối thiểu của menu con */
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Đổ bóng cho menu con */
-    border-radius: 0 0 10px 10px; /* Bo góc cho phần dưới cùng của menu con */
-    z-index: 100; /* Đảm bảo menu con hiển thị trên các phần tử khác */
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 220px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border-radius:3px;
+    border-top: solid 4px deepskyblue;
+    z-index: 100;
 }
 
 #nav > li:hover .dropdown-content {
-    display: block; /* Hiển thị menu con khi di chuột qua item cha */
+    display: block;
 }
 
 #nav li .dropdown-content a {
-    color: black; /* Màu chữ cho các mục trong menu con */
-    padding: 12px 16px; /* Padding cho các mục */
-    text-decoration: none; /* Loại bỏ gạch chân */
-    display: block; /* Hiển thị mỗi mục trên một dòng riêng */
+    color: black;
+    padding: 12px 16px;
+    border-radius: 3px;
+    text-decoration: none;
+    display: block;
 }
 
 #nav li .dropdown-content a:hover {
-    background-color: #ddd; /* Màu nền khi di chuột qua mục trong menu con */
+    background-color: #ddd;
 }
 
 /* Style cho dropdown-subnav để định vị subnav */
 .dropdown-subnav {
-    position: relative; /* Cần thiết để định vị subnav content */
+    position: relative;
 }
 
 /* Style cho dropdown-subnav-content */
 .dropdown-subnav-content {
+    border-top: solid 4px deepskyblue;
     display: none;
     position: absolute;
-    left: 100%; /* Đặt subnav bên phải của item gốc */
-    top: 0; /* Căn subnav với đỉnh của item gốc */
-    background-color: #f9f9f9; /* Màu nền cho subnav */
-    min-width: 180px; /* Chiều rộng tối thiểu của subnav */
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Đổ bóng cho subnav */
-    z-index: 101; /* Đảm bảo subnav hiển thị trên menu cha */
+    left: 100%;
+    top: 0;
+    background-color: #f9f9f9;
+    min-width: 220px;
+    border-radius: 3px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 101;
 }
 
-/* Hiển thị dropdown-subnav-content khi di chuột qua */
 .dropdown-subnav:hover .dropdown-subnav-content {
     display: block;
+    border-radius: 3px;
 }
 
 
 #header .Account-btn {
-    float: right;
-    /* line-height: 46px; */
-    display: flex;  /* Chuyển div thành flex container */
-    align-items: center;  /* Căn giữa theo chiều dọc */
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 0 10px;
+    cursor: pointer;
 }
 
+#header .Account-btn:hover {
+    background-color: rgba(29,142,208,.08);;
+    border-radius: 10px;
+}
+
+#header .Account-btn .ti-angle-up,
+#header .Account-btn .ti-angle-down {
+    animation-duration: 1s;
+    animation-fill-mode: both;
+}
+
+#header .Account-btn .ti-angle-up {
+    display: none;
+}
+.avatar-container {
+    position: relative;
+    display: block; /* hoặc 'block' tùy thuộc vào cách bạn muốn sắp xếp */
+}
+.Account-btn .account-menu{
+    display: none;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    height: 175px;
+    width: 260px;
+    transform: translateX(-80%);
+    border-radius: 3px;
+    background-color: #f9f9f9;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    padding: 12px 16px;
+    z-index: 100;
+}
+.menu-header {
+    display: flex;
+    align-items: center;
+    border-bottom: solid 2px;
+}
+
+
+.menu-header .menu-avatar {
+    margin-right: 10px;
+}
+
+.content-menu a {
+    display: block;
+    margin-top: 10px;
+    padding: 10px; /* Điều chỉnh đệm cho phù hợp */
+    text-decoration: none; /* Loại bỏ gạch chân của liên kết */
+    color: #000000; /* Màu chữ ban đầu */
+    transition: background-color 0.3s, color 0.3s; /* Hiệu ứng chuyển tiếp mượt mà */
+}
+
+.content-menu a:hover {
+    background-color: #f0f0f0; /* Màu nền khi hover */
+}
+/* CSS cho nút Sign Out */
+.content-menu form input[type="submit"] {
+    padding: 10px 20px;
+    background-color: #17a2b8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.content-menu form input[type="submit"]:hover {
+    background-color: #3494d4;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+
 #content {
-    margin: 46px 10px 0 10px;
+    margin: 56px 10px 0 10px;
 }
 
 #currentNav {
@@ -134,14 +238,13 @@ html, body, p, h1, h2, h3, h4, h5, h6, div {
 }
 #content .main-page {
     background-color: white;
-    padding: 5px;
-    min-height: 70vh;
+    padding: 16px;
+    min-height: 80vh;
     border-radius: 10px;
     overflow: auto;
 }
 
 .main-page .header-section {
-
     margin: 10px;
 }
 
@@ -150,12 +253,14 @@ html, body, p, h1, h2, h3, h4, h5, h6, div {
 }
 
 
+
+
 table {
     border-collapse: collapse;
     font-size: 0.9em;
     border-radius: 5px 5px 0 0;
-    table-layout: fixed; /* Đảm bảo chiều rộng cố định cho các cột */
-    width: 100%; /* Cho phép bảng mở rộng hoặc thu hẹp dựa trên nội dung */
+    table-layout: fixed;
+    width: 100%;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
@@ -182,28 +287,26 @@ table tbody tr:last-of-type {
     border-bottom: 2px solid #083761;
 }
 
-/* Thêm CSS cho cột cố định */
 .sticky-col {
     position: sticky;
     z-index: 1;
 }
-/* Màu nền khác nhau cho th và td */
+
 table thead th.sticky-col {
-    background-color: #083761; /* Màu nền cho cột tiêu đề */
+    background-color: #083761;
 }
 
 table tbody td.sticky-col {
-    background-color: white; /* Màu nền cho cột dữ liệu */
-    left: 0; /* Điều chỉnh dựa trên chiều rộng của các cột */
+    background-color: white;
+    left: 0;
 }
 
-/* Điều chỉnh vị trí cố định cho từng cột */
 .sticky-col.first {
     left: 0;
 }
 
 .sticky-col.second {
-    left: 100px; /* Thay đổi giá trị này dựa trên chiều rộng của cột "Mã Sinh Viên" */
+    left: 100px;
 }
 
 .sticky-col.third {
@@ -221,41 +324,75 @@ table tbody td.sticky-col {
 
 .custom-size {
     width: 150px;
+    text-overflow: ellipsis; /* Hiển thị dấu ... nếu nội dung quá dài */
+    overflow: hidden; /* Ẩn nội dung chảy ra ngoài */
+
 }
 
 .custom-size-lg {
     width: 200px;
 }
 
-
-
 .add-icon {
     display: inline-block;
-    font-size: small;
     text-rendering: auto;
-
-
 }
 
 .function-container {
-    display: flex; /* Sử dụng Flexbox */
-    align-items: center; /* Căn giữa các phần tử theo chiều dọc */
-    justify-content: flex-end; /* Đẩy .Add-new-section về phía bên phải cùng */
-    width: 100%; /* Đảm bảo container chiếm toàn bộ chiều rộng */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
 }
 
-/* Điều chỉnh kích thước của form và Add-new-section nếu cần */
 .function-container form, .Add-new-section {
-    flex: 1; /* Cho phép các phần tử mở rộng để chiếm không gian */
-    margin: 5px; /* Thêm một chút khoảng cách giữa các phần tử */
+    flex: 1;
+    margin: 5px;
 }
+
+.function-container input[type="submit"] {
+    background-color: #17a2b8;
+    color: white;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.function-container input[type="submit"]:hover {
+    background-color: #4481eb;
+}
+
+.function-container form select {
+    padding: 5px 10px; /* Gán giá trị padding */
+    border-radius: 8px; /* Gán giá trị border-radius */
+    border: 1px solid #ccc; /* Gán một border mỏng, bạn có thể điều chỉnh màu sắc nếu cần */
+    outline: none; /* Tùy chọn: loại bỏ đường viền mặc định khi focus */
+}
+.function-container select:focus {
+    border-color: #17a2b8;
+    box-shadow: 0 0 3px #17a2b8;
+}
+.name-header {
+    display: flex;
+}
+.name-header .divider {
+    flex-grow: 1;
+    height: 1px;
+    background-color: #17a2b8;
+    margin: 0 10px;
+}
+.listTable, .phaseContent {
+    flex-shrink: 0;
+}
+
+
 
 .Add-new-section .btn-add-new {
-    padding:0 5px 2px 5px;
-    height: 30px ;
-    font-weight: bold;
-    min-width: 100px;
-    border-radius: 50px;
+    padding:12px 10px;
+    line-height: 15px;
+    border-radius: 8px;
     border: #17a2b8;
     background-color: #17a2b8;
     color: #fff;
@@ -291,7 +428,7 @@ table tbody td.sticky-col {
     color: #fff;
     background-color: #17a2b8;
     border: 2px solid #17a2b8;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
 
@@ -307,7 +444,7 @@ table tbody td.sticky-col {
     color: #fff;
     background-color: #17a2b8;
     border: 2px solid #17a2b8;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
 }
@@ -400,7 +537,7 @@ table tbody td.sticky-col {
 
 
 #currentNav {
-    font-size: 16px;
+    font-size: 22px;
     font-weight: bold;
 }
 
@@ -430,69 +567,71 @@ table tbody td.sticky-col {
 
 /*Css cho form upload file*/
 #uploadForm {
-    max-width: 500px; /* Giới hạn chiều rộng tối đa của form */
-    margin: 0 auto; /* Căn giữa form */
-    padding: 15px; /* Thêm padding cho form */
-    border: 1px solid #ccc; /* Viền cho form */
-    border-radius: 5px; /* Bo góc của form */
-    background-color: #f9f9f9; /* Màu nền cho form */
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }
 
-.form-group {
-    margin-bottom: 15px; /* Khoảng cách giữa các nhóm form */
+#uploadForm .form-group {
+    margin-bottom: 15px;
 }
 
-.form-group label {
-    display: block; /* Hiển thị label trên một dòng riêng */
-    margin-bottom: 5px; /* Khoảng cách giữa label và input */
+#uploadForm .form-group label {
+    display: block;
+    margin-bottom: 5px;
 }
 
-.form-group input[type="file"],
-.form-group select {
-    width: 100%; /* Chiều rộng tối đa cho input và select */
-    padding: 5px; /* Padding cho input và select */
-    border: 1px solid #ddd; /* Viền cho input và select */
-    border-radius: 3px; /* Bo góc cho input và select */
+#uploadForm .form-group input[type="file"],
+#uploadForm .form-group select {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
 }
 
-.form-group button[type="submit"] {
-    width: 100%; /* Chiều rộng tối đa cho nút submit */
-    padding: 10px; /* Padding cho nút submit */
-    border: none; /* Loại bỏ viền nút submit */
-    border-radius: 3px; /* Bo góc nút submit */
-    background-color: #007bff; /* Màu nền nút submit */
-    color: white; /* Màu chữ nút submit */
-    cursor: pointer; /* Con trỏ chuột khi di chuyển qua nút submit */
+#uploadForm .form-group button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
 }
 
-.form-group button[type="submit"]:hover {
-    background-color: #0056b3; /* Thay đổi màu nền khi hover qua nút submit */
+#uploadForm .form-group button[type="submit"]:hover {
+    background-color: #0056b3;
 }
 
 .button-submit-confirm {
-    display: inline-flex;
-    justify-content: flex-end; /* Căn các nút về phía bên phải */
-    gap: 10px; /* Khoảng cách giữa các nút */
+    display: inline-flex; /* Sử dụng flexbox */
+    justify-content: space-between; /* Khoảng cách giữa các nút */
+    align-items: center; /* Căn giữa các nút theo chiều dọc */
     margin-bottom: 10px;
 }
 
 .button-submit-confirm form {
-    margin: 0; /* Loại bỏ margin mặc định của form */
+    margin: 0;
 }
 
 .button-submit-confirm button {
-    width: 100px; /* Đặt chiều rộng cố định cho mỗi nút */
-    flex-grow: 1; /* Cho phép nút mở rộng để lấp đầy không gian */
+    width: 110px;
+    flex-grow: 1;
+    border-radius: 4px;
+    margin-right: 10px;
 }
 
 
 
 #studentsTable .datatable {
-    transition: opacity 0.3s ease; /* Hiệu ứng chuyển đổi mượt mà cho opacity */
+    transition: opacity 0.3s ease;
 }
 
 #studentsTable .datatable:hover {
-    opacity: 0.8; /* Độ mờ tùy chỉnh khi di chuột qua */
+    opacity: 0.8;
 }
 
 /*css form đăng ký*/
@@ -535,7 +674,7 @@ table tbody td.sticky-col {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 10px; /* Bo tròn các trường nhập liệu */
+    border-radius: 10px;
     box-sizing: border-box;
 }
 
@@ -550,7 +689,7 @@ table tbody td.sticky-col {
 .signup-form-container .submit-btn {
     padding: 10px;
     border: none;
-    border-radius: 10px; /* Bo tròn nút */
+    border-radius: 10px;
     background-color: #007bff;
     color: white;
     cursor: pointer;
@@ -572,13 +711,13 @@ table tbody td.sticky-col {
     padding: 0;
     margin: 0;
     border: 1px solid #ddd;
-    border-top: none; /* Nếu bạn muốn loại bỏ đường viền trên cùng */
-    max-height: 200px; /* Chiều cao tối đa của danh sách */
-    overflow-y: auto; /* Cho phép cuộn nếu danh sách quá dài */
-    position: absolute; /* Đảm bảo danh sách nằm ngay dưới trường nhập liệu */
-    width: 150px; /* Chiều rộng bằng với trường nhập liệu */
+    border-top: none;
+    max-height: 200px;
+    overflow-y: auto;
+    position: absolute;
+    width: 150px;
     background-color: #fff;
-    z-index: 10; /* Đảm bảo nó nằm trên các phần tử khác */
+    z-index: 10;
 }
 
 .suggestions-list li {
@@ -592,44 +731,43 @@ table tbody td.sticky-col {
 }
 
 /*css cho form time phase*/
-/* Định dạng chung cho form */
 .form-time-phase {
-    max-width: 400px; /* Giới hạn chiều rộng của form */
-    margin: 0 auto; /* Căn giữa form */
-    padding: 20px; /* Khoảng cách xung quanh form */
-    border: 1px solid #ddd; /* Viền xung quanh form */
-    border-radius: 5px; /* Góc bo tròn cho form */
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Đổ bóng cho form */
-    background-color: #f9f9f9; /* Màu nền của form */
+    max-width: 400px; /
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    background-color: #f9f9f9;
 }
 
 /* Định dạng cho nhãn (label) */
 .form-time-phase label {
-    font-weight: bold; /* Chữ đậm cho nhãn */
+    font-weight: bold;
 }
 
 /* Định dạng cho input */
 .form-time-phase input[type="date"] {
-    width: 100%; /* Chiều rộng 100% cho input */
-    padding: 8px; /* Khoảng cách bên trong input */
-    margin-bottom: 10px; /* Khoảng cách giữa các input */
-    border: 1px solid #ccc; /* Viền xung quanh input */
-    border-radius: 3px; /* Góc bo tròn cho input */
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
 }
 
 /* Định dạng cho nút Lưu */
 .form-time-phase button[type="submit"] {
-    background-color: #007bff; /* Màu nền xanh cho nút Lưu */
-    color: #fff; /* Màu chữ trắng cho nút Lưu */
-    padding: 10px 20px; /* Kích thước nút Lưu */
-    border: none; /* Loại bỏ viền của nút Lưu */
-    border-radius: 3px; /* Góc bo tròn cho nút Lưu */
-    cursor: pointer; /* Con trỏ tay khi di chuột qua nút Lưu */
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
 }
 
 /* Định dạng cho nút Lưu khi hover */
 .form-time-phase button[type="submit"]:hover {
-    background-color: #0056b3; /* Màu nền xanh đậm khi hover */
+    background-color: #0056b3;
 }
 
 

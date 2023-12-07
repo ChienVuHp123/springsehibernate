@@ -183,9 +183,9 @@ public class QualifiedGraduateService {
         }
 
         // Cập nhật trạng thái hoặc xóa bản ghi trong bảng tạm
-        qualifiedGraduateRepository.deleteAll(graduates); // Hoặc cập nhật trạng thái nếu cần giữ lại lịch sử
+        qualifiedGraduateRepository.deleteAll(graduates);
 
-        return "Data has been successfully confirmed and saved.";
+        return "Xác nhận dữ liệu thành công";
     }
 
     public void deleteQualifiedGraduate() {

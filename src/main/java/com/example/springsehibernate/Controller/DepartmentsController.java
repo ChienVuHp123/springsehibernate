@@ -4,7 +4,6 @@ import com.example.springsehibernate.Entity.*;
 import com.example.springsehibernate.Repository.*;
 import com.example.springsehibernate.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -18,7 +17,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/bo-mon")
-public class BoMonController {
+public class DepartmentsController {
 
     @Autowired
     private StudentRepository studentRepository;
@@ -66,14 +65,14 @@ public class BoMonController {
         List<Student> students = studentService.getStudentsByLecturerAndAcademicYearAndSemester(lecturerID, currentAcademicYear, currentSemester);
         model.addAttribute("students", students);
 
-//        LocalDate currentDate = LocalDate.now();
-        LocalDate currentDate = LocalDate.of(2023, 9, 10); // Thiết lập ngày là 28/10/2023
+        LocalDate currentDate = LocalDate.now();
+//        LocalDate currentDate = LocalDate.of(2023, 9, 10); // Thiết lập ngày là 28/10/2023
 
         String showColumn = timePhaseService.getPhaseColumn(currentDate);
 
-        // Thêm biến showColumn vào model để truyền tới view
+
         model.addAttribute("showColumn", showColumn);
-        return "listView"; // "listView" là tên file view (Thymeleaf template) bạn muốn render
+        return "listView";
     }
 
     @PostMapping("/list/confirm/{messageId}")
@@ -150,8 +149,8 @@ public class BoMonController {
 //        List<ConfirmTable> confirmedStudents = confirmTableRepository.findByDepartmentId(currentUser.getUserID());
         List<StudentVersion> confirmedStudents = studentVersionRepository.findByVersionTypeAndLecturer_Department_DepartmentIdAndAcademicYearAndSemester("Bộ môn", currentUser.getOwnerId(), AcademicYearUtil.getCurrentAcademicYear(), AcademicYearUtil.getCurrentSemester());
         model.addAttribute("confirmedStudents", confirmedStudents);
-//        LocalDate currentDate = LocalDate.now();
-        LocalDate currentDate = LocalDate.of(2023, 9, 10); // Thiết lập ngày là 28/10/2023
+        LocalDate currentDate = LocalDate.now();
+//        LocalDate currentDate = LocalDate.of(2023, 9, 10); // Thiết lập ngày là 28/10/2023
 
         String showColumn = timePhaseService.getPhaseColumn(currentDate);
 
@@ -193,15 +192,13 @@ public class BoMonController {
 
     @GetMapping("/register")
     public String showRegistrationForm() {
-        // Trả về tên view chứa form đăng ký.
-        // Ví dụ, nếu bạn sử dụng Thymeleaf và có file "register.html" trong thư mục templates
         return "register";
     }
 
     @GetMapping("/{departmentId}")
     public String getLecturersByDepartment(@PathVariable Long departmentId, Model model) {
-//        List<Lecturer> lecturers = lecturerRepository.findByDepartment_FacultyId(departmentId);
-        List<Department> lecturers = departmentRepository.findByFacultyId(departmentId);
+        List<Lecturer> lecturers = lecturerRepository.findByDepartment_DepartmentId(departmentId);
+//        List<Department> lecturers = departmentRepository.findByFacultyId(departmentId);
         model.addAttribute("lecturers", lecturers);
         return "lecturers-list"; // Tên của trang HTML trong thư mục templates
     }

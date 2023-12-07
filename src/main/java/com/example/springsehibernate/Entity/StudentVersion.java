@@ -61,6 +61,11 @@ public class StudentVersion {
     @Column(name = "SecondLecturerReviewerWorkplace")
     private String SecondLecturerReviewerWorkplace;
 
+    @Column(name = "namesecondlecturer")
+    private String namesecondlecturer;
+
+    private String secondLecturerWorkSpace;
+
     private String academicYear;
 
     @Column(name = "Semester")
@@ -68,6 +73,8 @@ public class StudentVersion {
 
     @Column(name = "status")
     private String status;
+
+    private String filePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lecturerID")

@@ -8,6 +8,7 @@ import com.example.springsehibernate.Repository.LecturerRepository;
 import com.example.springsehibernate.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Role;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -89,6 +90,15 @@ public class UserService implements UserDetailsService {
             newLecturer.setDepartment(department);
             newLecturer.setName(newUser.getRealname());
             lecturerRepository.save(newLecturer);
+        } else if (registrationDto.getRole() == RoleEnum.BoMon) {
+            // Lấy ownerId từ người dùng hiện tại
+            Long currentUserId = authenticationFacade.getCurrentUser().getOwnerId();
+
+            Department newDepartment = new Department();
+            newDepartment.setDepartmentId(newUser.getOwnerId());
+            newDepartment.setFacultyId(currentUserId);
+            newDepartment.setName(newUser.getRealname());
+            departmentRepository.save(newDepartment);
         }
 
         return userRepository.save(newUser);

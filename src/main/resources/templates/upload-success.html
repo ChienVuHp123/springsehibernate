@@ -30,29 +30,31 @@
         <div class="main-page">
             <div class="header-section">
                 <div class="name-header">
-                    <h4>Danh sách bảng đã xác nhận</h4>
+                    <h5 style="color: #083761">Danh sách bảng đã xác nhận</h5>
                 </div>
             </div>
             <div class="content-section">
-                <form th:action="@{/khoa/upload-success}" method="get">
-                    <div>
-                        <label for="academicYear">Năm học:</label>
-                        <select id="academicYear" name="academicYear" required>
-                            <option th:each="year : ${academicYears}"
-                                    th:value="${year}"
-                                    th:selected="${year.equals(selectedYear)}"
-                                    th:text="${year}">
-                            </option>
-                        </select>
+                <div class="function-container">
+                    <form th:action="@{/khoa/upload-success}" method="get">
+                        <div>
+                            <label for="academicYear">Năm học:</label>
+                            <select id="academicYear" name="academicYear" required>
+                                <option th:each="year : ${academicYears}"
+                                        th:value="${year}"
+                                        th:selected="${year.equals(selectedYear)}"
+                                        th:text="${year}">
+                                </option>
+                            </select>
 
-                        <label for="semester">Học kỳ:</label>
-                        <select id="semester" name="semester">
-                            <option value="1" th:selected="${selectedSemester == 1}">Kỳ 1</option>
-                            <option value="2" th:selected="${selectedSemester == 2}">Kỳ 2</option>
-                        </select>
-                        <button type="submit">Tìm kiếm</button>
-                    </div>
-                </form>
+                            <label for="semester">Học kỳ:</label>
+                            <select id="semester" name="semester">
+                                <option value="1" th:selected="${selectedSemester == 1}">Kỳ 1</option>
+                                <option value="2" th:selected="${selectedSemester == 2}">Kỳ 2</option>
+                            </select>
+                            <input type="submit" value="Tìm kiếm">
+                        </div>
+                    </form>
+                </div>
 
                 <div th:if="${confirmedGraduates}">
                     <table>
