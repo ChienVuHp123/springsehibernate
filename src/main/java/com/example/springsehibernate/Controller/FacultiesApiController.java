@@ -31,13 +31,13 @@ public class FacultiesApiController {
     public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDto registrationDto) {
         try {
             User registeredUser = userService.registerNewUser(registrationDto);
-            // Trả về response phù hợp, có thể chỉ là thông báo hoặc thông tin người dùng đã đăng ký
+            
             return ResponseEntity.ok("Người dùng đã được đăng ký thành công với tên đăng nhập: " + registeredUser.getUsername());
         } catch (IllegalStateException e) {
-            // Trả về thông báo lỗi nếu đăng ký không thành công (ví dụ: tên người dùng đã tồn tại)
+            
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            // Xử lý các lỗi khác
+            
             return ResponseEntity.internalServerError().body("Có lỗi xảy ra trong quá trình đăng ký.");
         }
     }
